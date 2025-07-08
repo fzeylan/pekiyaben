@@ -1,0 +1,234 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Coaching
+@using Emoda.PekiYaBen.Entity.Helpers
+
+@model ProductInfo
+
+@section styles{
+
+    <link href="~/Content/summernote/summernote-lite.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.Jcrop.min.css" rel="stylesheet" />
+    <style>
+        #blah {
+            background-color: #FFF;
+            width: 825px;
+            height: 500px;
+            font-size: 24px;
+            display: block;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            @using (Html.BeginForm("Edit", "Product", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.Id)
+            <div class="box-body">
+                <div class="form-group col-sm-4">
+                    <label for="Title">Adı</label>
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Title)
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="Code">Kodu</label>
+                    @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Code)
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="Type">Ürün Tipi</label>
+                    @Html.EnumDropDownListFor(m => m.Type, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Type)
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="Description">Kısa Açıklama</label>
+                    @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="Image">Mobil Uygulama Resmi</label>
+                    @Html.TextBoxFor(m => m.Image, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="File">Ses Dosyası</label>
+                    @Html.TextBoxFor(m => m.File, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm-12">
+                    <label for="ContentDescription">Site Açıklaması</label>
+                    @Html.TextAreaFor(m => m.ContentDescription, new { @class = "form-control", @rows = "8" })
+                </div>
+
+
+                <div class="form-group col-sm-4">
+                    <label for="Image">Resim</label>
+                    <input type="hidden" id="ContentImage" name="ContentImage" />
+                    <span class="btn btn-primary col-sm-12 btn-file btn-sm">
+                        <span class="fileupload-new">Resim Seç</span>
+                        <input type="file" name="file" id="file" />
+                    </span>
+                </div>
+
+                @*<div class="form-group col-sm-4">
+            <label for="ContentImage">Site Resmi</label>
+            @Html.TextBoxFor(m => m.ContentImage, new { @class = "form-control" })
+        </div>*@
+                <div class="form-group col-sm-4">
+                    <label for="Price">Fiyatı</label>
+                    @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Price)
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="SortOrder">Sıra No</label>
+                    @Html.TextBoxFor(m => m.SortOrder, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.SortOrder)
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="Status">Durum</label>
+                    @Html.EnumDropDownListFor(m => m.Status, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Status)
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="Status">Ana Sayfada Görünsün mü</label>
+                    @Html.CheckBoxFor(m => m.ShowMainPage)
+                </div>
+
+            </div>
+                <div class="box-footer text-right">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Kaydet</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="cropModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">İçerik Resmi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="preview" style="width:100% !important" />
+                <canvas id="canvas" height="5" width="5" style="display:none"></canvas>
+            </div>
+            <div class="modal-footer">
+                <input type="button" id="btnSave" value="Resmi Kırp" class="btn btn-warning btn-sm w-100" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Html.Partial("_ValidationScriptsPartial");
+    <script src="~/Content/summernote/summernote-lite.js"></script>
+    <script src="~/Content/summernote/lang/summernote-tr-TR.min.js"></script>
+    <script src="~/Scripts/jquery.Jcrop.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ContentDescription').summernote({
+                lang: 'tr-TR',
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'fontsize']],
+                    ['color', ['color', 'forecolor']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['height']],
+                    ['link', ['link']],
+                    ['picture', ['picture']],
+                    ['mybutton', ['myVideo'], ['picture']]
+                ],
+                buttons: {
+                    myVideo: function (context) {
+                        var ui = $.summernote.ui;
+                        var button = ui.button({
+                            contents: '<i class="fa fa-video-camera"/>',
+                            tooltip: 'video',
+                            click: function () {
+                                var div = document.createElement('div');
+                                div.classList.add('embed-container');
+                                var videoCode = prompt('Video/Podcast paylaşım kodunu giriniz');
+                                if (videoCode) {
+                                    var embed = $(videoCode)[0];
+                                    context.invoke('editor.insertNode', embed);
+                                }
+                            }
+                        });
+
+                        return button.render();
+                    }
+                },
+                height: 300
+            });
+
+            $('#file').change(function () {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#preview').show();
+                    $('#cropModal').modal({ "backdrop": "static" });
+
+                    GetImageDimensions(e.target.result, function (data) {
+                        originalSize = data;
+                        $('#preview').attr("src", e.target.result);
+                        currentSize = {
+                            width: $('#preview').width(), height: $('#preview').height()
+                        };
+
+                        cropSize = {
+                            x: 0, y: 0, w: currentSize.width, h: currentSize.height
+                        };
+
+                        $('#preview').Jcrop({
+                            aspectRatio: 500 / 500,
+                            boxWidth: 500,
+                            boxHeight: 500,
+                            setSelect: [0, 0, cropSize.w, cropSize.h],
+                            onChange: SetCoordinates,
+                            onSelect: SetCoordinates,
+                        });
+                    })
+                };
+                reader.readAsDataURL($(this)[0].files[0]);
+            });
+
+            $('#btnSave').click(function () {
+                var x1 = cropSize.x;
+                var y1 = cropSize.y;
+                var width = cropSize.w;
+                var height = cropSize.h;
+                var canvas = $("#canvas")[0];
+                var context = canvas.getContext('2d');
+                var img = new Image();
+                var xRatio = originalSize.width / currentSize.width;
+                var yRatio = originalSize.height / currentSize.height;
+
+                img.onload = function () {
+                    canvas.height = height * yRatio;
+                    canvas.width = width * xRatio;
+                    context.drawImage(img, x1 * xRatio, y1 * yRatio, width * xRatio, height * yRatio, 0, 0, width * xRatio, height * yRatio);
+                    $("#ContentImage").val(canvas.toDataURL());
+                    $('#cropModal').modal("hide");
+                    //$("#form-crop").submit();
+                };
+                img.src = $("#preview").attr("src");
+            });
+
+            function GetImageDimensions(path, callback) {
+                var img = new Image();
+                img.onload = function () {
+                    callback({
+                        width: img.width,
+                        height: img.height
+                    });
+                }
+                img.src = path;
+            }
+
+            function SetCoordinates(c) {
+                cropSize = c;
+            };
+        });
+
+    </script>
+}

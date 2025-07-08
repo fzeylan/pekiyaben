@@ -1,0 +1,468 @@
+﻿@using PekiYaBen.WebSite.Models.ViewModels;
+@using PekiYaBen.WebSite.Enums;
+@using PekiYaBen.WebSite.Extensions;
+
+@model UserUpdateViewModel
+
+@{
+    ViewBag.Title = "Profilim";
+    var cities = new string[] { "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Ankara", "Antalya", "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "İstanbul", "İzmir", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kırıkkale", "Kırklareli", "Kırşehir", "Kilis", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Siirt", "Sinop", "Sivas", "Şanlıurfa", "Şırnak", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak", "Türkiye Dışı" };
+
+    InvoiceUpdateViewModel invoiceInfo = (InvoiceUpdateViewModel)ViewBag.InvoiceInfo;
+
+}
+
+@section styles{
+    <link href="~/Content/assets/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="~/Content/assets/js/jcrop/css/jquery.Jcrop.min.css" rel="stylesheet" />
+}
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h3 class="text-white">@ViewBag.Title</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content" class="section-padding ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 p-0">
+                    <div class="card border-0">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                    <div class="fileupload-new thumbnail p-1">
+                                        <img id="thumb" src="data:image/png;base64,@Model.ProfilePhoto" />
+                                    </div>
+                                    <div class="fileupload-preview fileupload-exists thumbnail p-1"></div>
+                                    <span class="btn btn-primary col-sm-12 btn-file btn-sm">
+                                        <span class="fileupload-new">Güncelle</span>
+                                        <input type="file" name="file" id="file" />
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="list-group-item text-center">
+                                <i class="fa fa-envelope text-primary"></i>
+                                <span class="s-12">@Model.Email</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="upload-progress col-md-6 hidden">
+                        <div class="upload-percent-value pull-left">0%</div>
+                        <div class="upload-percent-bar pull-left"></div>
+                    </div>
+                    <div id="upload-status"></div>
+                </div>
+                <div class="col-md-9 p-0 pl-3">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profil Bilgileri</a>
+                            <a class="nav-item nav-link" id="nav-invoice-tab" data-toggle="tab" href="#nav-invoice" role="tab" aria-controls="nav-invoice" aria-selected="true">Fatura Bilgileri</a>
+                        </div>
+                    </nav>
+
+                    <div class="tab-content p-3" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <form action="/hesabim/profilim" class="form-horizontal" method="post">
+                                <div class="card border-0">
+                                    <div class="card-body px-0">
+                                        <div class="form-group">
+                                            <label for="FullName" class="col-sm-2 control-label">Ad Soyad</label>
+                                            <div class="col-sm-12">
+                                                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", data_validate = "required", @maxlength = "100" })
+                                                <span class="text-danger field-validation-error" data-valmsg-for="FullName" data-valmsg-replace="true">
+                                                    <span id="FullName-error" class=""></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <label for="Gender" class="control-label">Cinsiyet</label>
+                                                        @Html.DropDownListFor(m => m.Gender, new SelectList(EnumerationExtensions.ToList<General.Gender>(), "key", "value"), "Cinsiyet Seçiniz", new { @class = "form-control" })
+                                                    </div>
+                                                    <div class="col-sm-4 mt-3 mt-md-0">
+                                                        <label for="PhoneNumber" class="control-label">Telefon Numarası</label>
+                                                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", data_validate = "required", @maxlength = "20" })
+                                                    </div>
+                                                    <div class="col-sm-4 mt-3 mt-md-0">
+                                                        <label for="DateOfBirth" class="control-label">Doğum Tarihi</label>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                                            </div>
+                                                            @Html.TextBoxFor(m => m.DateOfBirth, "{0:dd.MM.yyyy}", new { @class = "form-control datepicker", data_validate = "required", @maxlength = "20", @autocomplete = "off" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <label for="OccupationStatus" class="control-label">Çalışma Durumu</label>
+                                                        @Html.DropDownListFor(m => m.OccupationStatus, new SelectList(EnumerationExtensions.ToList<General.OccupationStatus>(), "key", "value"), "Çalışma Durumu Seçiniz", new { @class = "form-control" })
+                                                    </div>
+                                                    <div class="col-sm-4 mt-3 mt-md-0">
+                                                        <label for="Occupation" class="control-label">Mesleği</label>
+                                                        @Html.TextBoxFor(m => m.Occupation, new { @class = "form-control", @maxlength = "50" })
+                                                    </div>
+                                                    <div class="col-sm-4 mt-3 mt-md-0">
+                                                        <label for="City" class="control-label">Şehir</label>
+                                                        @Html.DropDownListFor(m => m.City, new SelectList(cities), "Şehir Seçiniz", new { @class = "form-control" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <label class="control-label">Şifre</label>
+                                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @maxlength = "12" })
+                                                        <small><i>Mevcut şifrenizi giriniz</i></small>
+                                                    </div>
+                                                    <div class="col-sm-4 mt-3 mt-md-0">
+                                                        <label class="control-label">&nbsp;</label>
+                                                        @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", @maxlength = "12" })
+                                                        <small><i>Yeni şifrenizi giriniz</i></small>
+                                                    </div>
+                                                    <div class="col-sm-4 mt-3 mt-md-0">
+                                                        <label class="control-label">&nbsp;</label>
+                                                        @Html.PasswordFor(m => m.NewPasswordAgain, new { @class = "form-control", @maxlength = "12" })
+                                                        <small><i>Yeni şifrenizi tekrar giriniz</i></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <div class="col-sm-12">
+                                                @Html.CheckBoxFor(m => m.CommunicationPermission)
+                                                <label for="CommunicationPermission" class="control-label">
+                                                    E-posta ve SMS ile iletişime geçilmesine dair
+                                                    <a href="communication" data-remote="/doc/AcikRizaMetni.html" data-toggle="modal" data-target="#communication" class="text-primary">Açık Rıza Metni</a>'ni kabul ediyorum
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <div class="col-sm-12">
+                                                <a href="agreement" data-remote="/doc/KullaniciSozlesmesi.html" data-toggle="modal" data-target="#agreement" class="text-primary pl-3">Üyelik Sözleşmesi</a>'ni görüntüle
+                                            </div>
+                                        </div>
+                                        <div class="form-group text-right">
+                                            <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-save"></i> Kaydet</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade " id="nav-invoice" role="tabpanel" aria-labelledby="nav-invoice-tab">
+                            <form action="/hesabim/fatura-bilgileri" class="form-horizontal" method="post">
+                                <div class="card border-0">
+                                    <div class="card-body px-0">
+                                        <div class="form-group">
+                                            <label for="InvoiceType" class="col-sm-2 control-label">Fatura Tipi</label>
+                                            <div class="col-sm-4">
+                                                @Html.DropDownListFor(m => invoiceInfo.InvoiceType, new SelectList(EnumerationExtensions.ToList<General.InvoiceType>(), "key", "value"), "Fatura Tipi Seçiniz", new { @class = "form-control", @onchange = "SetInvoiceType()" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix" id="individual">
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-4 mt-md-0">
+                                                        <label for="PersonalID" class="control-label">TC Kimlik No</label>
+                                                        @Html.TextBoxFor(m => invoiceInfo.PersonalID, new { @class = "form-control", @maxlength = "11", @autocomplete = "off" })
+                                                        <span class="text-danger field-validation-error" data-valmsg-for="PersonalID" data-valmsg-replace="true">
+                                                            <span id="PersonalID-error" class=""></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix" id="corporate">
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <label for="CompanyName" class="control-label">Firma Adı</label>
+                                                        @Html.TextBoxFor(m => invoiceInfo.CompanyName, new { @class = "form-control", @maxlength = "100", @autocomplete = "off" })
+                                                        <span class="text-danger field-validation-error" data-valmsg-for="CompanyName" data-valmsg-replace="true">
+                                                            <span id="CompanyName-error" class=""></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-sm-4 mt-md-0">
+                                                        <label for="TaxOffice" class="control-label">Vergi Dairesi</label>
+                                                        @Html.TextBoxFor(m => invoiceInfo.TaxOffice, new { @class = "form-control", @maxlength = "50", @autocomplete = "off" })
+                                                        <span class="text-danger field-validation-error" data-valmsg-for="TaxOffice" data-valmsg-replace="true">
+                                                            <span id="TaxOffice-error" class=""></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-sm-4 mt-md-0">
+                                                        <label for="TaxNumber" class="control-label">Vergi Numarası</label>
+                                                        @Html.TextBoxFor(m => invoiceInfo.TaxNumber, new { @class = "form-control", @maxlength = "50", @autocomplete = "off" })
+                                                        <span class="text-danger field-validation-error" data-valmsg-for="TaxNumber" data-valmsg-replace="true">
+                                                            <span id="TaxNumber-error" class=""></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix" id="individual">
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="InvoiceAddress" class="control-label">Adres</label>
+                                                        @Html.TextAreaFor(m => invoiceInfo.InvoiceAddress, new { @class = "form-control", @maxlength = "250", @rows = "5", @autocomplete = "off" })
+                                                        <span class="text-danger field-validation-error" data-valmsg-for="InvoiceAddress" data-valmsg-replace="true">
+                                                            <span id="InvoiceAddress-error" class=""></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-right">
+                                        <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-save"></i> Kaydet</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="cropModal">
+    <form action="/hesabim/profil-fotografi" class="form-horizontal" enctype="multipart/form-data" method="post" id="form-crop">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Profil Resmi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="preview" style="width:100% !important" />
+                    <input type="hidden" id="croppedImage" name="croppedImage" />
+                    <canvas id="canvas" height="5" width="5" style="display:none"></canvas>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="btnSave" value="Kırp ve Kaydet" class="btn btn-warning btn-sm w-100" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section scripts{
+    @{ Html.RenderPartial("_ValidationScriptsPartial"); }
+    <script src="~/Content/assets/js/jcrop/js/jquery.Jcrop.min.js"></script>
+    <script src="~/Content/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/Content/assets/js/plugins/bootstrap-datepicker/js/bootstrap-dateppicker.tr.js"></script>
+    <script type="text/javascript">
+        var originalSize, currentSize, cropSize;
+
+        $(document).ready(function () {
+
+            SetInvoiceType();
+
+            $(".datepicker").datepicker({
+                format: "dd.mm.yyyy",
+                language: "tr",
+                clearBtn: true
+            });
+
+            $('#file').change(function () {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#preview').show();
+                    $('#cropModal').modal({ "backdrop": "static" });
+
+                    GetImageDimensions(e.target.result, function (data) {
+                        originalSize = data;
+                        $('#preview').attr("src", e.target.result);
+                        currentSize = {
+                            width: $('#preview').width(), height: $('#preview').height()
+                        };
+
+                        cropSize = {
+                            x: 0, y: 0, w: currentSize.width, h: currentSize.height
+                        };
+
+                        $('#preview').Jcrop({
+                            aspectRatio: 1,
+                            boxWidth: 800,
+                            boxHeight: 800,
+                            setSelect: [0, 0, cropSize.w, cropSize.h],
+                            onChange: SetCoordinates,
+                            onSelect: SetCoordinates,
+                        });
+                    })
+                };
+                reader.readAsDataURL($(this)[0].files[0]);
+            });
+
+            $('#btnSave').click(function () {
+                var x1 = cropSize.x;
+                var y1 = cropSize.y;
+                var width = cropSize.w;
+                var height = cropSize.h;
+                var canvas = $("#canvas")[0];
+                var context = canvas.getContext('2d');
+                var img = new Image();
+                var xRatio = originalSize.width / currentSize.width;
+                var yRatio = originalSize.height / currentSize.height;
+
+                img.onload = function () {
+                    canvas.height = height * yRatio;
+                    canvas.width = width * xRatio;
+                    context.drawImage(img, x1 * xRatio, y1 * yRatio, width * xRatio, height * yRatio, 0, 0, width * xRatio, height * yRatio);
+                    $("#croppedImage").val(canvas.toDataURL());
+                    $("#form-crop").submit();
+                };
+                img.src = $("#preview").attr("src");
+            });
+
+        });
+
+        function SetInvoiceType() {
+            $("#individual").hide();
+            $("#corporate").hide();
+            var type = $("#invoiceInfo_InvoiceType").val();
+            if (type == "0") {
+                $("#individual").show();
+            }
+            else if (type == "1") {
+                $("#corporate").show();
+            }
+        }
+
+        function GetImageDimensions(path, callback) {
+            var img = new Image();
+            img.onload = function () {
+                callback({
+                    width: img.width,
+                    height: img.height
+                });
+            }
+            img.src = path;
+        }
+
+        function SetCoordinates(c) {
+            cropSize = c;
+        };
+
+        function CheckID(value) {
+            value = value.toString();
+            var isEleven = /^[0-9]{11}$/.test(value);
+            var totalX = 0;
+            for (var i = 0; i < 10; i++) {
+                totalX += Number(value.substr(i, 1));
+            }
+            var isRuleX = totalX % 10 == value.substr(10, 1);
+            var totalY1 = 0;
+            var totalY2 = 0;
+            for (var i = 0; i < 10; i += 2) {
+                totalY1 += Number(value.substr(i, 1));
+            }
+            for (var i = 1; i < 10; i += 2) {
+                totalY2 += Number(value.substr(i, 1));
+            }
+            var isRuleY = ((totalY1 * 7) - totalY2) % 10 == value.substr(9, 0);
+            return isEleven && isRuleX && isRuleY;
+        };
+
+        $('#invoiceInfo_PersonalID').on('keyup focus blur load', function (event) {
+            event.preventDefault();
+            if ($("#invoiceInfo_IsOtherCitizen").is(":checked") == false) {
+
+                var isValid = CheckID($(this).val());
+                if (isValid) {
+                    $(this).removeClass('input-validation-error');
+                    $("#PersonalID-error").html("");
+                }
+                else {
+                    $(this).addClass('input-validation-error');
+                    $("#PersonalID-error").html("Geçersiz kimlik numarası");
+                }
+            } else {
+                $(this).removeClass('input-validation-error');
+                $("#PersonalID-error").html("");
+            }
+        });
+
+        $.validator.unobtrusive.adapters.add('requiredfor', ['other', 'type'], function (options) {
+            var getModelPrefix = function (fieldName) {
+                return fieldName.substr(0, fieldName.lastIndexOf('.') + 1);
+            }
+
+            var appendModelPrefix = function (value, prefix) {
+                if (value.indexOf('.') === 0) {
+                    value = value.replace('.', prefix);
+                }
+                return value;
+            }
+
+            var prefix = getModelPrefix(options.element.name),
+                other = options.params.other,
+                fullOtherName = prefix + other,
+                type = options.params.type,
+                element = $(options.form).find(':input[name="' + fullOtherName + '"]')[0];
+
+            options.rules['requiredfor'] = element;
+            if (options.message) {
+                options.messages['requiredfor'] = options.message;
+            }
+        });
+
+        $.validator.addMethod('requiredfor', function (value, element, params) {
+
+            if (element.id == "invoiceInfo_PersonalID") {
+                var otherValue = $(params).val();
+                var type = $(element).data("val-requiredfor-type").toString();
+                if (otherValue == type && otherValue != '' && $(element).val() != '') {
+                    return true;
+                }
+                return value != null && value != '';
+
+            } else {
+                return true;
+            }
+        }, '');
+
+        $.validator.addMethod(
+            'date',
+            function (value, element, params) {
+                if (this.optional(element)) {
+                    return true;
+                };
+                var result = false;
+                try {
+                    var dtg = $.fn.datepicker.DPGlobal;
+                    dtg.parseDate(value, 'dd.mm.yyyy');
+                    result = true;
+                } catch (err) {
+                    result = false;
+                }
+                return result;
+            },
+            ''
+        );
+    </script>
+}

@@ -1,0 +1,46 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Helpers
+
+<section class="content">
+    <!-- Info boxes -->
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-ios-people-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">BUGÜN YENİ ÜYE</span>
+                    <span class="info-box-number">@ViewBag.DailyMembers</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">BU AY YENİ ÜYE</span>
+                    <span class="info-box-number">@ViewBag.MonthlyMembers</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-purple"><i class="ion ion-ios-cart-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">BUGÜN SATIŞ</span>
+                    <span class="info-box-number">@ViewBag.DailySales (@ViewBag.DailySalesAmount TL)</span>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">BU AY SATIŞ</span>
+                    <span class="info-box-number">@ViewBag.MonthlySales (@ViewBag.MonthlySalesAmount TL)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

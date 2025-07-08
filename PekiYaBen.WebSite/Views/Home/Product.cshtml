@@ -1,0 +1,200 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+@using PekiYaBen.WebSite.Extensions
+@using System.Text.RegularExpressions
+
+@model Product
+@{
+    ViewBag.Title = Model.Title.Replace("Atölye - ", "").Trim();
+
+    var products = (List<Product>)ViewBag.Products;
+    var contents = (List<Content>)ViewBag.Contents;
+    var coaches = (List<Coach>)ViewBag.Coaches;
+}
+<script>
+  fbq('track', 'ViewContent');
+</script>
+
+<div class="blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h2 class="text-white">@ViewBag.Title</h2>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="section blog-area ptb_100">
+        <div class="container">
+            <div class="row d-block">
+                <div class="col-12 col-lg-9 float-sm-right">
+                    <article class="single-blog-details">
+                        <div class="blog-content sApp-blog">
+                            <div class="blog-details">
+                                <h3 class="blog-title py-2 py-sm-3">@ViewBag.Title</h3>
+                                <p class="d-none d-sm-block">@*@Html.Raw(System.Text.RegularExpressions.Regex.Replace(Model.ContentDescription, "style=(\"|')[^(\"|')]*(\"|')", ""))*@ </p>
+                                <p class="d-none d-sm-block">@Html.Raw(Model.ContentDescription) </p>
+                            </div>
+                            <br />
+                            <div class="text-center mb-4">
+                                <div class="section-heading text-center">
+                                    <h2>@ViewBag.Title Ekibimiz</h2>
+                                </div>
+                                @*<a href="/online-kocluk-ve-atolye/@Model.Id/@Model.Title.Trim().FriendlyUrl()" class="btn btn-outline-primary btn-sm" btn-sm><i class="fa fa-calendar-alt"></i> @ViewBag.Title randevusu almak için hemen tıkla</a>*@
+                            </div>
+                        </div>
+                    </article>
+                    <article class="single-blog-details">
+                        @{
+                            @Html.Action("_Coaches", "Account", new { interviewType = Model.Title })
+                        }
+                    </article>
+                    <div class="row">
+                        @foreach (var content in contents)
+                        {
+                            string typeName = content.Type == 0 ? "Yazılar" : (content.Type == 1 ? "Videolar" : "Podcastler");
+                            var url = $"/Kisisel-Gelisim/{typeName.FriendlyUrl()}/{content.Id}/{content.Title.FriendlyUrl()}/{content.Id}/{content.Title.FriendlyUrl()}";
+                            <div class="col-12 col-md-6 mb-4">
+                                <div class="single-blog res-margin h-100">
+                                    <div class="blog-thumb">
+                                        <a href="@url">
+                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Home", new {path=content.Image, width = 398, height = 241})" alt="@content.Title">
+
+                                            @*<img src="@content.Image" />*@
+                                            @if (content.Type > 0)
+                                            {
+                                                <div class="ovl">
+                                                    <i class="fa @(content.Type == 1 ? "fa-play" : "fa-volume-up") fa-10x"></i>
+                                                </div>
+                                            }
+                                        </a>
+                                    </div>
+                                    <div class="blog-content p-4 h-100">
+                                        <ul class="meta-info d-flex justify-content-between">
+                                            <li>@coaches.FirstOrDefault(x => x.Id == content.CoachId).FullName</li>
+                                            <li>@content.CreateDate.ToDayMonthYear()</li>
+                                        </ul>
+                                        <h3 class="blog-title my-3"><a href="@url">@content.Title</a></h3>
+                                        <p>
+                                            @Html.Raw(content.Summary)
+                                        </p>
+                                        <a href="@url" class="btn btn-outline-primary btn-sm mt-3">Devamı</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-3">
+                    <aside class="sidebar">
+                        <!-- Single Widget -->
+                        <div class="single-widget">
+                            <!-- Category Widget -->
+                            <div class="accordions widget catagory-widget" id="cat-accordion">
+                                <div class="single-accordion blog-accordion">
+                                    <h5>
+                                        <a role="button" class="collapse show text-uppercase d-block p-3" data-toggle="collapse" href="#accordion1">
+                                            KOÇLUK TİPLERİ
+                                        </a>
+                                    </h5>
+                                    <!-- Category Widget Content -->
+                                    <div id="accordion1" class="accordion-content widget-content collapse show" data-parent="#cat-accordion">
+                                        <!-- Category Widget Items -->
+                                        <ul class="widget-items">
+                                            @foreach (var product in products)
+                                            {
+                                                if (product.Title.StartsWith("Atölye") || product.Title.StartsWith("Sertifika Programı") || product.Title.StartsWith("Genel Atölye"))
+                                                {
+                                                    continue;
+                                                }
+
+                                                var productTitle = product.Title;
+                                                var url = $"/kocluk/{product.Id}/{product.Title.FriendlyUrl()}";
+                                                <li><a href="@url" class="d-flex p-3 @(product.Id == Model.Id ? "active" : "")"><span>@productTitle</span></a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="single-widget">
+                            <div class="accordions widget catagory-widget" id="cat-accordion">
+                                <div class="single-accordion blog-accordion">
+                                    <h5>
+                                        <a role="button" class="collapse show text-uppercase d-block p-3" data-toggle="collapse" href="#accordion1">
+                                            SERTİFİKA PROGRAMLARI
+                                        </a>
+                                    </h5>
+                                    <!-- Category Widget Content -->
+                                    <div id="accordion1" class="accordion-content widget-content collapse show" data-parent="#cat-accordion">
+                                        <!-- Category Widget Items -->
+                                        <ul class="widget-items">
+                                            @foreach (var product in products)
+                                            {
+                                                if (!product.Title.StartsWith("Sertifika Programı"))
+                                                {
+                                                    continue;
+                                                }
+                                                var productTitle = product.Title.Replace("Sertifika Programı - ", "").Trim();
+                                                var url = $"/kocluk/{product.Id}/{product.Title.FriendlyUrl()}";
+                                                <li><a href="@url" class="d-flex p-3 @(product.Id == Model.Id ? "active" : "")"><span>@productTitle</span></a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="single-widget">
+                            <div class="accordions widget catagory-widget" id="cat-accordion">
+                                <div class="single-accordion blog-accordion">
+                                    <h5>
+                                        <a role="button" class="collapse show text-uppercase d-block p-3" data-toggle="collapse" href="#accordion1">
+                                            ATÖLYELER
+                                        </a>
+                                    </h5>
+                                    <!-- Category Widget Content -->
+                                    <div id="accordion1" class="accordion-content widget-content collapse show" data-parent="#cat-accordion">
+                                        <!-- Category Widget Items -->
+                                        <ul class="widget-items">
+                                            @foreach (var product in products)
+                                            {
+                                                string baslik = string.Empty;
+                                                if (!product.Title.StartsWith("Atölye") && !product.Title.StartsWith("Genel Atölye"))
+                                                {
+                                                    continue;
+                                                }
+                                                if (product.Title.StartsWith("Atölye"))
+                                                {
+                                                    baslik = product.Title.Replace("Atölye - ", "").Trim();
+                                                }
+                                                else
+                                                {
+                                                    baslik = product.Title.Replace("Atölye - ", "").Trim();
+                                                }
+
+                                                var url = $"/kocluk/{product.Id}/{product.Title.FriendlyUrl()}";
+                                                <li><a href="@url" class="d-flex p-3 @(product.Id == Model.Id ? "active" : "")"><span>@baslik</span></a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+        </div>
+    </section>
+</div>

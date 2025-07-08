@@ -1,0 +1,133 @@
+﻿@using PekiYaBen.WebSite.Models.ViewModels;
+@model RegisterUserViewModel
+
+@{
+    ViewBag.Title = "Üye Ol";
+    var message = (string)ViewBag.Message;
+}
+
+@section styles{
+    <style>
+        .modal-dialog {
+            overflow-y: initial !important
+        }
+
+        .modal-body {
+            height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+}
+
+<script>
+    fbq('track', 'CompleteRegistration');
+</script>
+
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h3 class="text-white">@ViewBag.Title</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content" class="section-padding ptb_100">
+        <div class="container">
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "col-sm-12 col-lg-6 m-auto" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-user"></i>
+                                    </span>
+                                </div>
+                                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control form-control-lg", autocomplete = "off", placeholder = "Ad Soyad" })
+                            </div>
+                            <span class="text-danger field-validation-error" data-valmsg-for="FullName" data-valmsg-replace="true">
+                                <span id="FullName-error" class=""></span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-envelope"></i>
+                                    </span>
+                                </div>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-lg", autocomplete = "off", placeholder = "E-posta" })
+                            </div>
+                            <span class="text-danger field-validation-error" data-valmsg-for="Email" data-valmsg-replace="true">
+                                <span id="Email-error" class=""></span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-lock"></i>
+                                    </span>
+                                </div>
+                                @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control form-control-lg", autocomplete = "off", placeholder = "Şifre" })
+
+                            </div>
+                            <span class="text-danger field-validation-error" data-valmsg-for="NewPassword" data-valmsg-replace="true">
+                                <span id="NewPassword-error" class=""></span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-lock"></i>
+                                    </span>
+                                </div>
+                                @Html.PasswordFor(m => m.NewPasswordAgain, new { @class = "form-control form-control-lg", autocomplete = "off", placeholder = "Şifre Tekrar" })
+
+                            </div>
+                            <span class="text-danger field-validation-error" data-valmsg-for="NewPasswordAgain" data-valmsg-replace="true">
+                                <span id="NewPasswordAgain-error" class=""></span>
+                            </span>
+                        </div>
+                        <div class="form-check">
+                            <div class="input-group">
+                                @Html.CheckBoxFor(m => m.ConfirmAgreement, new { @class = "form-check-input", @data_val = "true", @data_val_mandatory = "Üyelik sözleşmesi onaylanmadan üye kaydı yapılamaz" })
+                                <label for="ConfirmAgreement">
+                                    <a href="agreement" data-remote="/doc/KullaniciSozlesmesi.html" data-toggle="modal" data-target="#agreement" class="text-primary">Üyelik Sözleşmesi</a>'ni okudum kabul ediyorum.
+                                </label>
+                            </div>
+                            <span class="text-danger field-validation-error" data-valmsg-for="ConfirmAgreement" data-valmsg-replace="true">
+                                <span id="ConfirmAgreement-error" class=""></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary w-100 mt-3" type="submit">Üye Ol</button>
+                    </div>
+                    <div class="col-sm-12 text-center mt-4 border-top">
+                        <span class="d-block pt-2">Hesabın var mı? <a href="/hesabim/giris" class="text-info">Hemen Giriş Yap</a></span>
+                        <span class="d-block pt-2"><a href="/hesabim/sifre-hatirlat" class="text-info">Şifreni mi unuttun?</a></span>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</div>
+@section scripts{
+    @{ Html.RenderPartial("_ValidationScriptsPartial"); }
+    <script type="text/javascript">
+        $.validator.unobtrusive.adapters.addBool("mandatory", "required");
+    </script>
+}

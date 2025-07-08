@@ -1,0 +1,181 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Helpers
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/Scripts/DataTables/datatables.min.css">
+}
+<div class="col-12">
+    <a href="/Coach/Edit/" class="btn btn-danger btn-sm"><i class="glyphicon-plus"></i> Yeni Koç Ekle</a><br /><br />
+</div>
+<table class="table table-striped" cellspacing="0" style="width: 100%" id="users">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Ad Soyad</th>
+            <th>Unvanı</th>
+            <th>E-posta</th>
+            <th>Doğum Tarihi</th>
+            <th>Cep Telefonu</th>
+            <th>Koçluk Listesi</th>
+            <th>Kay. Tar.</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+@section scripts {
+    <script type="text/javascript">
+        var statusList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.Status>()));
+        function FindInList(list, property, value) {
+            var filtered = list.filter(function (list) { return eval("list." + property) == value });
+            if (filtered)
+                return filtered[0];
+            else
+                return null;
+        }
+    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.js"></script>
+    <script type="text/javascript">
+        var table;
+        var thead = "<tr><th>Sıra</th><th>Adı</th><th>Kodu</th><th>İşlem Kodu</th><th>Market</th><th>Fiyatı</th><th>Detay</th><th>Tarih</th><th>Durum</th></tr>";
+        $(function () {
+            // end example, if posted successful, can apply to datatables.net below
+            table = $('#users').DataTable(
+                {
+                    //'rowCallback': function (row, data, index) {
+                    //    if (data.Gender == '0') {
+                    //        $(row).find('td:eq(4)').css('color', 'darkblue');
+                    //    }
+                    //    else {
+                    //        $(row).find('td:eq(4)').css('color', 'fuchsia');
+                    //    }
+                    //    if (data.OccupationStatus == '0') {
+                    //        $(row).find('td:eq(7)').css('color', 'red');
+                    //    }
+                    //    else {
+                    //        $(row).find('td:eq(7)').css('color', 'green');
+                    //    }
+
+                    //    if (data.CommunicationPermission == '0') {
+                    //        $(row).find('td:eq(9)').css('color', 'red');
+                    //    }
+                    //    else {
+                    //        $(row).find('td:eq(9)').css('color', 'green');
+                    //    }
+
+                    //    if (data.SocialMedia == '0') {
+                    //        $(row).find('td:eq(12)').css('color', 'darkblue');
+                    //    }
+                    //    else {
+                    //        $(row).find('td:eq(12)').css('color', 'red');
+                    //    }
+
+                    //    if (data.Status == '0') {
+                    //        $(row).find('td:eq(15)').css('color', 'red');
+                    //    }
+                    //    else {
+                    //        $(row).find('td:eq(15)').css('color', 'green');
+                    //    }
+                    //},
+					scrollX: true,
+					responsive: true,
+                    fixedHeader: true,
+                    iDisplayLength: 100,
+                    sPaginationType: "full_numbers",
+                    processing: true,
+                    serverSide: true,
+                    "language": {
+                        "url": "/Scripts/DataTables/tr.json"
+                    },
+                    "lengthMenu": [
+                        [10, 25, 50, 100, 500, 1000],
+                        [10, 25, 50, 100, 500, 1000]
+                    ], //key-value
+                    "paging": true,
+                    "ordering": true,
+                    "order": [[1, "desc"]],
+                    "info": true,
+                    ajax: {
+                        type: "POST",
+                        contentType: "application/json",
+                        url: '@Url.Action("GetCoaches", "Coach")',
+                        data: function (d) {
+                            return JSON.stringify(d);
+                        },
+                        dataFilter: function (res) {
+                            return res;
+                        },
+                        error: function (x, y) {
+                            debugger;
+                            console.log(x);
+
+                        }
+                    },
+                    "columns": [
+                        {
+                            "data": "ProfilePhoto",
+                            "sType": "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return "<a href='/Coach/Edit/" + full.Id + "'><img src='" + data + "' class='profile-user-img' /></a>";
+                            }
+                        },
+                        {
+                            "data": "FullName",
+                            "sType": "string"
+                        },
+                        {
+                            "data": "Title",
+                            "sType": "string"
+                        },
+                        {
+                            "data": "Email",
+                            "sType": "string"
+                        },
+                        {
+                            "data": "DateOfBirth",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null && data !='01.01.0001')
+                                    return moment(data).format('DD.MM.YYYY');
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "PhoneNumber",
+                            "sType": "string"
+                        },
+                        {
+                            "data": "CoachingInfo",
+                            "sType": "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return data.replace(/,/g, '<br>');
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "RegisterDate",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return moment(data).format('DD.MM.YYYY');
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "Status",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(statusList, "Key", data).Value;
+                                return "";
+                            }
+                        },
+
+                    ]
+                });
+        });
+    </script>
+}

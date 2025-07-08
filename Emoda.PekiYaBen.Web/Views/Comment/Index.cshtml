@@ -1,0 +1,129 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Helpers
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/Scripts/DataTables/datatables.min.css">
+}
+<div class="col-12">
+    <a href="/Comment/Edit/" class="btn btn-danger btn-sm"><i class="glyphicon-plus"></i> Yeni Yorum Ekle</a><br /><br />
+</div>
+<table class="table table-striped" cellspacing="0" style="width: 100%" id="users">
+    <thead>
+        <tr>
+            <th>Koç</th>
+            <th>Ürün</th>
+            <th>Müşteri Adı - Soyadı</th>
+            <th>Başlık</th>
+            <th>Yorum</th>
+            <th>Puan</th>
+            <th>Tarih</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+@section scripts {
+    <script type="text/javascript">
+        function FindInList(list, property, value) {
+            var filtered = list.filter(function (list) { return eval("list." + property) == value });
+            if (filtered)
+                return filtered[0];
+            else
+                return null;
+        }
+    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.js"></script>
+    <script type="text/javascript">
+        var table;
+        $(function () {
+            table = $('#users').DataTable(
+                {
+					scrollX: true,
+					responsive: true,
+                    fixedHeader: true,
+                    iDisplayLength: 100,
+                    processing: true,
+                    serverSide: true,
+                    filter:false,
+                    language: {
+                        url: "/Scripts/DataTables/tr.json"
+                    },
+                    lengthMenu: [
+                        [10, 25, 50, 100, 500, 1000],
+                        [10, 25, 50, 100, 500, 1000]
+                    ], //key-value
+                    paging: false,
+                    ordering: false,
+                    order: [[1, "asc"], [2,"asc"]],
+                    info: true,
+                    ajax: {
+                        type: "POST",
+                        contentType: "application/json",
+                        url: '@Url.Action("GetComments", "Comment")',
+                        data: function (d) {
+                            return JSON.stringify(d);
+                        },
+                        dataFilter: function (res) {
+                            return res;
+                        },
+                        error: function (x, y) {
+                            debugger;
+                            console.log(x);
+
+                        }
+                    },
+                    columns: [
+                        {
+                            data: "CoachFullName",
+                            sType: "string",
+
+                        },
+                        {
+                            data: "ProductTitle",
+                            sType: "string",
+
+                        },
+                        {
+                            data: "FullName",
+                            sType: "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return "<a href='/Comment/Edit/" + full.Id + "'>" + data + "</a>";
+                            }
+                        },
+                        {
+                            data: "Title",
+                            sType: "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return "<a href='/Comment/Edit/" + full.Id + "'>" + data + "</a>";
+                            }
+                        },
+                        {
+                            data: "Comment",
+                            sType: "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return "<a href='/Comment/Edit/" + full.Id + "'>" + data + "</a>";
+                            }
+                        },
+                        {
+                            data: "Stars",
+                            sType: "int",
+
+                        },
+                        {
+                            "data": "CreatedDate",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null && data != '01.01.0001')
+                                    return moment(data).format('DD.MM.YYYY');
+                                return "";
+                            }
+                        }
+
+                    ]
+                });
+        });
+    </script>
+}

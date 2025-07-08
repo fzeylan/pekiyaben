@@ -1,0 +1,54 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Content
+@using Emoda.PekiYaBen.Entity.Helpers
+
+@model ContentCategoryInfo
+
+@section styles{
+
+    <link href="~/Content/summernote/summernote-lite.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.Jcrop.min.css" rel="stylesheet" />
+    <style>
+        #blah {
+            background-color: #FFF;
+            width: 825px;
+            height: 500px;
+            font-size: 24px;
+            display: block;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            @using (Html.BeginForm("EditCategory", "Content", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.Id)
+            <div class="box-body">
+                <div class="form-group col-sm-4">
+                    <label for="Title">Başlığı</label>
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Title)
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="Status">Türü</label>
+                    @Html.EnumDropDownListFor(m => m.Type, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Type)
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="Status">Durum</label>
+                    @Html.EnumDropDownListFor(m => m.Status, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Status)
+                </div>
+            </div>
+                <div class="box-footer text-right">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Kaydet</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Html.Partial("_ValidationScriptsPartial");
+}

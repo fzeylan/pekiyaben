@@ -1,0 +1,168 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+
+@model List<Product>
+
+@{
+    ViewBag.Title = "Online Koçluk ve Atölye";
+    Product selectedProduct = (Product)ViewBag.SelectedProduct;
+}
+
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h3 class="text-white">@ViewBag.Title</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content" class="section-padding ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12 pb-2 text-center">
+                                    <h6>Randevu oluşturmak için Koçluk Tipi veya Atölye seçerek ilgili alanlardaki uzman koçlarımızı listeleyebilirsiniz.</h6>
+                                    <div class="btn-group btn-group-toggle mt-3" data-toggle="buttons">
+                                        <label class="btn btn-outline-primary active" for="interview-type-coaching">
+                                            <input type="radio" name="interview-type" id="interview-type-coaching" value="coaching" autocomplete="off" checked> Koçluk
+                                        </label>
+                                        <label class="btn btn-outline-primary" for="interview-type-atelier">
+                                            <input type="radio" name="interview-type" id="interview-type-atelier" value="atelier" autocomplete="off"> Atölye
+                                        </label>
+                                        <label class="btn btn-outline-primary" for="interview-type-atelier">
+                                            <input type="radio" name="interview-type" id="interview-type-sertifika" value="sertifika" autocomplete="off"> Sertifika
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-10 m-auto">
+                                        <div id="coaching-type" class="text-center">
+                                            @{
+                                                var coachingType = "";
+                                                foreach (var cType in Model.Where(x => !x.Title.Contains("Atölye") && !x.Title.Contains("Sertifika Programı")))
+                                                {
+                                                    if (selectedProduct != null && selectedProduct.Id == cType.Id)
+                                                    {
+                                                        coachingType = "Coach";
+                                                    }
+                                                    <button class="btn btn-outline-secondary btn-sm mr-2 mt-3" id="product_@cType.Id" onclick="GetCoachingList(this, '@Html.Raw(cType.Title)')">
+                                                        @cType.Title
+                                                    </button>
+                                                }
+                                            }
+                                        </div>
+                                        <div id="atelier-type" class="text-center" style="display:none">
+                                            @foreach (var cType in Model.Where(x => x.Title.Contains("Atölye")))
+                                            {
+                                                if (selectedProduct != null && selectedProduct.Id == cType.Id)
+                                                {
+                                                    coachingType = "Atelier";
+                                                }
+
+                                                var title = cType.Title.Replace("Atölye - ", "").Trim();
+                                                <button class="btn btn-outline-secondary btn-sm mr-2 mt-3" id="product_@cType.Id" onclick="GetCoachingList(this, '@Html.Raw(cType.Title)')">
+                                                    @title
+                                                </button>
+                                            }
+                                        </div>
+                                        <div id="sertifika-type" class="text-center" style="display:none; width:800px">
+                                            @foreach (var cType in Model.Where(x => x.Title.Contains("Sertifika Programı")))
+                                            {
+                                                if (selectedProduct != null && selectedProduct.Id == cType.Id)
+                                                {
+                                                    coachingType = "Sertifika";
+                                                }
+
+                                                var title = cType.Title.Replace("Sertifika Programı - ", "").Trim();
+                                                <button class="btn btn-outline-secondary btn-sm mr-2 mt-3" id="product_@cType.Id" onclick="GetCoachingList(this, '@Html.Raw(cType.Title)')">
+                                                    @title
+                                                </button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12" id="coaches">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("[name='interview-type']").change(function () {
+                var val = $(this).val();
+                if (val == "coaching") {
+                    $("#coaching-type").show();
+                    $("#atelier-type").hide();
+                    $("#sertifika-type").hide();
+
+                    $("#coaching-type button")[0].click();
+                }
+                else if (val == "sertifika") {
+                    $("#sertifika-type").show();
+                    $("#atelier-type").hide();
+                    $("#coaching-type").hide();
+
+                    $("#sertifika-type button")[0].click();
+                }
+                else {
+                    $("#atelier-type").show();
+                    $("#coaching-type").hide();
+                    $("#sertifika-type").hide();
+                    
+                    $("#atelier-type button")[0].click()
+                }
+            });
+
+            @if(coachingType=="Atelier")
+            {
+                <text>$("#interview-type-atelier").click();</text>
+            }
+             @if(coachingType== "Sertifika")
+             {
+                <text>$("#interview-type-sertifika").click();</text>
+            }
+            @if (selectedProduct != null)
+            {
+                <text>$("#product_@selectedProduct.Id")[0].click();</text>
+            }
+            else {
+                <text>$("#coaching-type button")[0].click();</text>
+            }
+
+        });
+
+        function GetCoachingList(obj, type) {
+            $("#coaching-type button").removeClass("active");
+            $("#atelier-type button").removeClass("active");
+            $("#sertifika-type button").removeClass("active");
+            $(obj).addClass("active");
+
+            $.get("/koclar", { interviewType: type }, function (data) {
+                $("#coaches").html(data);
+            });
+
+        }
+    </script>
+}

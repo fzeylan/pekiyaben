@@ -1,0 +1,91 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+
+@model Product
+@{
+    ViewBag.Title = Model != null ? Model.Title + " satın alıyorsunuz" : "Koçluk Görüşmesi";
+    var showPayment = (bool)ViewBag.ShowPayment;
+}
+
+@section styles{
+
+}
+<script>
+
+    fbq('track', 'AddPaymentInfo');
+
+</script>
+
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h3 class="text-white">@ViewBag.Title</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content" class="section-padding ptb_100">
+        <div class="container">
+            <div class="row">
+
+                @if (showPayment)
+                {
+                    <script>
+
+                        fbq('track', 'Purchase', { value: 0.00, currency: 'TRY' });
+
+                    </script>
+                    <div class="col-12 text-center mb-3">
+                        Tahsilat işlemleriniz PayTR Güvenli Ödeme altyapısı ile gerçekleştirilmektedir.<br />
+                        <a href="https://www.paytr.com/guvenlik" target="_blank"><img src="https://www.paytr.com/img/general/paytr.svg" class="mt-3" style="height: 25px;" alt="PayTR" /></a>
+                    </div>
+                    <div class="col-12 text-center"><h3>@Model.Title (@Model.Price.ToString("#0.00") TL)</h3></div>
+                    <iframe visible="true" runat="server" id="paytriframe" frameborder="0" scrolling="no" style="width: 100%;" src="@ViewBag.Src"></iframe>
+                }
+                else
+                {
+                    <div class="col-12 text-center">
+                        <p>Bir sorun oluştu, ödeme işlemine devam edemiyoruz.</p>
+                        <div class="clearfix"></div>
+                        <p><a href="javascript:history.go(-1);" class="btn btn-outline-primary bnt-sm"><i class="fa fa-calendar"></i> Randevu Takvimine Dön</a></p>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+</div>
+@section scripts{
+    @if (showPayment)
+    {
+        <script src="https://www.paytr.com/js/iframeResizer.min.js"></script>
+        <script type="text/javascript">iFrameResize({}, '#paytriframe');</script>
+        <script type="text/javascript">
+            var attentionMessage = "Randevunuzu unutmayın!";
+            var intId; 
+            window.onload = function () {
+                var pageTitle = document.title;
+
+                document.addEventListener('visibilitychange', function (e) {
+                    var isPageActive = !document.hidden;
+                    if (!isPageActive) {
+                        intId = setInterval(changeTitle, 1000);
+                    } else {
+                        clearInterval(intId);
+                        document.title = pageTitle;
+                    }
+                });
+            };
+            function changeTitle() {
+                document.title = document.title == "@Html.Raw(ViewBag.Title)" ? attentionMessage : "@Html.Raw(ViewBag.Title)";
+            }
+        </script>
+    }
+}

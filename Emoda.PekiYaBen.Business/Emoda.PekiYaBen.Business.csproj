@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7481E3FD-22E4-4088-82DD-4FA67E441DCA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Emoda.PekiYaBen.Business</RootNamespace>
+    <AssemblyName>Emoda.PekiYaBen.Business</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Dapper.Contrib, Version=1.50.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.Contrib.1.50.0\lib\net45\Dapper.Contrib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OLCA.Infrastructure.CQS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OLCA.Infrastructure.CQS.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commands\RegisterUserCommand.cs" />
+    <Compile Include="Commands\RenewPasswordCommand.cs" />
+    <Compile Include="Commands\SaveNotificationMessageCommand.cs" />
+    <Compile Include="Commands\SavePaymentCommand.cs" />
+    <Compile Include="Commands\RemoveCoachCalendarCommand.cs" />
+    <Compile Include="Commands\UpdateCoachCalendarCommand.cs" />
+    <Compile Include="Commands\UpdateFAQCommand.cs" />
+    <Compile Include="Commands\UpdateContentCategoryCommand.cs" />
+    <Compile Include="Commands\UpdateContentCommand.cs" />
+    <Compile Include="Commands\UpdateCommentCommand.cs" />
+    <Compile Include="Commands\UpdateProductCommand.cs" />
+    <Compile Include="Commands\UpdateCoachCommand.cs" />
+    <Compile Include="Commands\UpdateUserCommand.cs" />
+    <Compile Include="Commands\ValidateUserCommand.cs" />
+    <Compile Include="DTOs\CategoryListItem.cs" />
+    <Compile Include="DTOs\FAQListItem.cs" />
+    <Compile Include="DTOs\ContentListItem.cs" />
+    <Compile Include="DTOs\InterviewListItem.cs" />
+    <Compile Include="DTOs\CommentListItem.cs" />
+    <Compile Include="DTOs\ProductListItem.cs" />
+    <Compile Include="DTOs\PaymentItem.cs" />
+    <Compile Include="DTOs\CoachListItem.cs" />
+    <Compile Include="DTOs\UserListItem.cs" />
+    <Compile Include="Handlers\Commands\RenewPasswordCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\SaveNotificationMessageCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\RemoveCoachCalendarCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\UdpateContentCategoryCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\UpdateCoachCalendarCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\UdpateContentCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\UpdateFAQCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\UpdateCommentCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\UpdateProductCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\UpdateCoachCommandHandler.cs" />
+    <Compile Include="Handlers\Commands\ValidateUserCommandHandler.cs" />
+    <Compile Include="Handlers\Queries\GetCalendarListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetCoachCalendarListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetFAQListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetFAQInfoQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetContentCategoryInfoQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetContentInfoQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetCategoryListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetCommentInfoQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetProductInfoQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetInterviewListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetContentListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetCommentListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetProductListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetProductInfoListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetUserInfoByEmailQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetCoachInfoQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetUserInfoQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetCoachListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetNotificationUserListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetUserPaymentsListQueryHandler.cs" />
+    <Compile Include="Handlers\Queries\GetUserListQueryHandler.cs" />
+    <Compile Include="Helpers\DataAccess.cs" />
+    <Compile Include="Helpers\FCMService.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\APageableQuery.cs" />
+    <Compile Include="Queries\GetCalendarListQuery.cs" />
+    <Compile Include="Queries\GetCoachCalendarListQuery.cs" />
+    <Compile Include="Queries\GetFAQInfoQuery.cs" />
+    <Compile Include="Queries\GetFAQListQuery.cs" />
+    <Compile Include="Queries\GetContentCategoryInfoQuery.cs" />
+    <Compile Include="Queries\GetContentInfoQuery.cs" />
+    <Compile Include="Queries\GetCategoryListQuery.cs" />
+    <Compile Include="Queries\GetCommentInfoQuery.cs" />
+    <Compile Include="Queries\GetProductInfoQuery.cs" />
+    <Compile Include="Queries\GetInterviewListQuery.cs" />
+    <Compile Include="Queries\GetProductInfoListQuery.cs" />
+    <Compile Include="Queries\GetContentListQuery.cs" />
+    <Compile Include="Queries\GetCommentListQuery.cs" />
+    <Compile Include="Queries\GetProductListQuery.cs" />
+    <Compile Include="Queries\GetPaymentListQuery.cs" />
+    <Compile Include="Queries\GetUserInfoByEmailQuery.cs" />
+    <Compile Include="Queries\GetCoachInfoQuery.cs" />
+    <Compile Include="Queries\GetUserInfoQuery.cs" />
+    <Compile Include="Queries\GetCoachListQuery.cs" />
+    <Compile Include="Queries\GetNotificationUserListQuery.cs" />
+    <Compile Include="Queries\GetUserListQuery.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Documents\Peki Ya Ben Analiz Dokümanı.docx" />
+    <None Include="Documents\Pekiyaben TDD.xlsx" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Emoda.PekiYaBen.Entity\Emoda.PekiYaBen.Entity.csproj">
+      <Project>{a699247d-5271-4091-b462-f53d013e1fd1}</Project>
+      <Name>Emoda.PekiYaBen.Entity</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

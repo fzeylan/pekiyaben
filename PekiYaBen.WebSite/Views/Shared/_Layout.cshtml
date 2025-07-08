@@ -1,0 +1,673 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+@using PekiYaBen.WebSite.Models;
+@using PekiYaBen.WebSite.Helpers;
+@using PekiYaBen.WebSite.Extensions
+
+
+@{
+    MethodResult result = (MethodResult)TempData["Result"];
+    AppUser user = AuthenticationHelper.GetAuthenticatedUser();
+    List<Product> products = GeneralHelpers.GetProductList();
+
+}
+<!DOCTYPE html>
+<html>
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1478615972511158');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=1478615972511158&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- End Facebook Pixel Code -->
+
+
+
+    @RenderSection("MetaDesc", required: false)
+    @RenderSection("MetaKeys", required: false)
+
+    @RenderSection("styles", required: false)
+    <!-- Favicon  -->
+    <link rel="icon" href="/content/assets/img/favicon.png">
+    <!-- ***** All CSS Files ***** -->
+    <!-- Style css -->
+    <link rel="stylesheet" href="/content/assets/css/style.css">
+
+    <!-- Responsive css -->
+    <link rel="stylesheet" href="/content/assets/css/responsive.css">
+    <style type="text/css">
+        #agreement .modal-dialog, #communication .modal-dialog {
+            overflow-y: initial !important
+        }
+
+        #agreement .modal-body, #communication .modal-body {
+            height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+
+
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-MF4WC66');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body class="homepage-2">
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date(); k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(72272602, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/72272602" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MF4WC66"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    @*<div class="preloader-main">
+            <div class="preloader-wapper">
+                <svg class="preloader" xmlns="http://www.w3.org/2000/svg" version="1.1" width="600" height="200">
+                    <defs>
+                        <filter id="goo" x="-40%" y="-40%" height="200%" width="400%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -8" result="goo" />
+                        </filter>
+                    </defs>
+                    <g filter="url(#goo)">
+                        <circle class="dot" cx="50" cy="50" r="25" fill="#19a5c9" />
+                        <circle class="dot" cx="50" cy="50" r="25" fill="#19a5c9" />
+                    </g>
+                </svg>
+                <div>
+                    <div class="loader-section section-left"></div>
+                    <div class="loader-section section-right"></div>
+                </div>
+            </div>
+        </div>*@
+
+    <!--====== Scroll To Top Area Start ======-->
+    <div id="scrollUp" title="Scroll To Top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    <!--====== Scroll To Top Area End ======-->
+
+    <div class="main">
+        <!-- ***** Header Start ***** -->
+        <header class="navbar navbar-sticky navbar-expand-lg navbar-dark">
+            <div class="container position-relative">
+                <a class="navbar-brand" href="/">
+                    <img class="navbar-brand-regular" src="/content/assets/img/logo/logo.png" alt="PekiYaBen" height="50" />
+                    <img class="navbar-brand-sticky" src="/content/assets/img/logo/logo.png" alt="PekiYaBen" height="50" />
+                </a>
+                <button class="navbar-toggler d-lg-none" type="button" data-toggle="navbarToggler" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-inner">
+                    <button class="navbar-toggler d-lg-none" type="button" data-toggle="navbarToggler" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <nav>
+                        <ul class="navbar-nav float-none float-lg-right " id="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">Anasayfa</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Kocluk-Ekibimiz">Koçluk Ekibimiz</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="javascript:;" data-toggle="dropdown">
+                                    Kişisel Gelişim
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("Blog","Home")">Yazılar</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("Video","Home")">Videolar</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("Podcast","Home")">Podcastler</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" style="color:#0e1054 !important" href="/online-kocluk-ve-atolye">RANDEVU AL</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Iletisim">İletişim</a>
+                            </li>
+                            @if (user == null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/hesabim/kayit-ol">Üye Ol</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" href="/hesabim/giris"><span class="bg-warning">Üye Girişi</span></a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <div class="user-account">
+                                        <div class="dropdown">
+                                            @if (user.ProfilePhoto != null && user.ProfilePhoto.Length > 0)
+                                            {
+                                                <a href="/hesabim/profilim"><img src="data:image/png;base64,@Convert.ToBase64String(user.ProfilePhoto)" class="rounded-circle user-photo" /></a>
+                                            }
+                                            <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown">@user.FullName</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/hesabim/profilim"><i class="fa fa-user-alt mr-3"></i> Profilim</a></li>
+                                                <li><a href="/hesabim/satin-aldiklarim"><i class="fa fa-shopping-cart mr-3"></i> Satın Aldıklarım</a></li>
+                                                <li><a href="/hesabim/randevularim"><i class="fa fa-calendar mr-3"></i> Randevularım</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="/hesabim/cikis" class="text-danger"><i class="fa fa-sign-out-alt mr-3"></i>Çıkış</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <!-- ***** Header End ***** -->
+
+        @RenderBody()
+
+        <!--====== Footer Area Start ======-->
+        <footer class="footer-area border-top">
+            <!-- Footer Top -->
+            <div class="footer-top ptb_50">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <!-- Footer Items -->
+                            <div class="footer-items">
+                                <!-- Logo -->
+                                <a class="navbar-brand" href="#">
+                                    <img class="logo" src="/content/assets/img/logo/logo.png" alt="">
+                                </a>
+                                <div class="social-icons d-flex mt-4">
+                                    <a class="facebook ml-0" href="https://www.facebook.com/pekiyabencom/" target="_blank">
+                                        <i class="fab fa-facebook-f"></i>
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a class="instagram" href="https://www.instagram.com/pekiyabencom/">
+                                        <i class="fab fa-instagram"></i>
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a class="linkedin" href="https://www.linkedin.com/in/tnia-app-a30300163/">
+                                        <i class="fab fa-linkedin"></i>
+                                        <i class="fab fa-linkedin"></i>
+                                    </a>
+                                </div>
+                                <div class="store-buttons store-black d-flex flex-wrap mt-5">
+                                    <a href="https://play.google.com/store/apps/details?id=com.emoda.pekiyaben" target="_blank">
+                                        <img src="/content/assets/img/icon/google-play.png" alt="">
+                                    </a>
+                                    <a href="https://itunes.apple.com/tr/app/peki-ya-ben/id1326616376?l=tr&mt=8" target="_blank">
+                                        <img src="/content/assets/img/icon/app-store.png" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <!-- Footer Items -->
+                            <div class="footer-items">
+                                <!-- Footer Title -->
+                                <ul>
+                                    <li class="py-2"><a href="/">Anasayfa</a></li>
+                                    <li class="py-2"><a href="/PekiYaBen">Peki Ya Ben?</a></li>
+                                    <li class="py-2"><a href="/Sikca-Sorulanlar">Sıkça Sorulanlar</a></li>
+                                    <li class="py-2"><a href="/Iletisim">İletişim</a></li>
+                                    <li class="py-2">
+                                        <a href="agreement" data-remote="/doc/KullaniciSozlesmesi.html" data-toggle="modal" data-target="#agreement">Üyelik Sözleşmesi ve KVKK</a>
+                                    </li>
+                                    <li class="py-2">
+                                        <a href="communication" data-remote="/doc/AcikRizaMetni.html" data-toggle="modal" data-target="#communication">Açık Rıza Metni</a>
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <!-- Footer Items -->
+                            <div class="footer-items">
+                                <ul>
+                                    <li class="py-2"><a href="/Kisisel-Durum-Analizi">Kişisel Durum Analizi</a></li>
+                                    <li class="py-2"><a href="/Kisisel-Strateji-Belirleme">Kişisel Stratej Belirleme</a></li>
+                                    <li class="py-2"><a href="/Bilincalti-Uygulamalari">Bilinçaltı Uygulamaları</a></li>
+                                    <li class="py-2"><a href="/Kocluk-Gorusmeleri">Koçluk Görüşmeleri</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="footer-items">
+                                <ul>
+                                    @foreach (var product in products)
+                                    {
+                                        var url = "/Kocluk-Ekibimiz/" + product.Id + "/" + product.Title.FriendlyUrl();
+                                        if (product.Title.Contains("Atölye"))
+                                        {
+                                            continue;
+                                        }
+                                        <li class="py-2"><a href="@url">@product.Title</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Copyright Area -->
+                            <div class="copyright-area d-flex flex-wrap justify-content-center justify-content-sm-between text-center py-4">
+                                <div class="copyright-left">&copy; Copyrights 2020 Peki Ya Ben</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--====== Footer Area End ======-->
+
+        <div class="modal fade" id="mdlLogin" tabindex="-1" role="dialog" aria-labelledby="mdlLogin" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">ÜYE GİRİŞİ</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="divLogin">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-envelope"></i>
+                                            </span>
+                                        </div>
+                                        <input autocomplete="off" class="form-control form-control-lg" id="EmailMod" name="Email" placeholder="E-posta" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-lock-open"></i>
+                                            </span>
+                                        </div>
+                                        <input autocomplete="off" class="form-control form-control-lg" id="PasswordMod" name="Password" placeholder="Password" type="password">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="text-danger" id="lblMessage"></label>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 mt-3" type="submit" onclick="Login(1)" action="LoginMod">Giriş Yap</button>
+                            </div>
+                            <div class="col-12 text-center mt-4 border-top">
+                                <span class="d-block pt-2">Hesabın yok mu? <a onclick="ChangePage(2)" class="text-info">Hemen Üye Ol</a></span>
+                            </div>
+                        </div>
+
+                        <div class="row" id="divSignUp" style="display:none">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-user"></i>
+                                            </span>
+                                        </div>
+                                        <input autocomplete="off" class="form-control form-control-lg" id="FullNamePass" name="FullNamePass" placeholder="Ad Soyad" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-envelope"></i>
+                                            </span>
+                                        </div>
+                                        <input autocomplete="off" class="form-control form-control-lg" id="EmailPass" name="EmailPass" placeholder="E-posta" type="email" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-lock"></i>
+                                            </span>
+                                        </div>
+                                        <input autocomplete="off" class="form-control form-control-lg" id="NewPasswordPass" name="NewPasswordPass" placeholder="Şifre" type="password" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-lock"></i>
+                                            </span>
+                                        </div>
+                                        <input autocomplete="off" class="form-control form-control-lg" id="NewPasswordAgainPass" name="NewPasswordAgainPass" placeholder="Şifre Tekrar" type="password" value="">
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <div class="input-group">
+
+                                        <input id="ConfirmAgreementPass" name="ConfirmAgreementPass" type="checkbox">
+                                        <label class="ml-2" for="ConfirmAgreement">
+                                            <a href="/doc/KullaniciSozlesmesi.html" target="_blank" class="text-primary">Üyelik Sözleşmesi</a>'ni okudum kabul ediyorum.
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="text-danger" id="lblMessageSignUp"></label>
+                            </div>
+                            <div class="col-sm-12">
+                                <button class="btn btn-primary w-100 mt-3" type="submit" onclick="Login(2)" action="SignMod">Üye Ol</button>
+                            </div>
+                            <div class="col-sm-12 text-center mt-4 border-top">
+                                <span class="d-block pt-2">Hesabın var mı? <a onclick="ChangePage(1)" class="text-info">Hemen Giriş Yap</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="communication" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="agreement" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <div class="modal fade" id="mdlInvoice" tabindex="-1" role="dialog" aria-labelledby="mdlInvoice" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">FATURA BİLGİLERİ</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="card-body px-0">
+                                <div class="col-sm-12 mb-3">
+                                    <label for="InvoiceTypeInv" class="control-label">Fatura Tipi</label>
+                                    <select class="form-control valid" id="InvoiceTypeInv" name="InvoiceTypeInv" onchange="SetInvoiceTypeInv()">
+                                        <option selected="selected" value="0">Bireysel</option>
+                                        <option value="1">Kurumsal</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-12" id="individual">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label for="PersonalIDInv" class="control-label">TC Kimlik No</label>
+                                            <input autocomplete="off" class="form-control form-control-lg" id="PersonalIDInv" name="PersonalIDInv" type="text" value="" maxlength="11">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" id="corporate">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label for="CompanyNameInv" class="control-label">Firma Adı</label>
+                                            <input autocomplete="off" class="form-control form-control-lg" id="CompanyNameInv" name="CompanyNameInv" type="text" value="" maxlength="100">
+                                        </div>
+                                        <div class="col-sm-4 mt-md-0">
+                                            <label for="TaxOfficeInv" class="control-label">Vergi Dairesi</label>
+                                            <input autocomplete="off" class="form-control form-control-lg" id="TaxOfficeInv" name="TaxOfficeInv" type="text" value="" maxlength="50">
+                                        </div>
+                                        <div class="col-sm-4 mt-md-0">
+                                            <label for="TaxNumberInv" class="control-label">Vergi Numarası</label>
+                                            <input autocomplete="off" class="form-control form-control-lg" id="TaxNumberInv" name="TaxNumberInv" type="text" value="" maxlength="50">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" id="individual">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label for="InvoiceAddressInv" class="control-label">Adres</label>
+                                            <textarea autocomplete="off" class="form-control form-control-lg" id="InvoiceAddressInv" name="InvoiceAddressInv" rows="5" maxlength="250"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="text-danger" id="lblMessageInv"></label>
+                                </div>
+                                <div class="col-sm-12 mt-2">
+                                    <button class="btn btn-danger btn-sm" type="submit" onclick="location.reload()"><i class="fa fa-door-closed"></i> Çıkış</button>
+                                    <button class="btn btn-primary btn-sm float-right" type="submit" onclick="SaveInvoice()"><i class="fa fa-save"></i> Kaydet</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ***** All jQuery Plugins ***** -->
+    <!-- jQuery(necessary for all JavaScript plugins) -->
+    <script src="/content/assets/js/jquery/jquery-3.3.1.min.js"></script>
+
+    <!-- Bootstrap js -->
+    <script src="/content/assets/js/bootstrap/popper.min.js"></script>
+    <script src="/content/assets/js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- Plugins js -->
+    <script src="/content/assets/js/plugins/plugins.min.js"></script>
+
+    <!-- Active js -->
+    <script src="/content/assets/js/active.js"></script>
+
+    @RenderSection("scripts", required: false)
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-176759288-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-176759288-1');
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#agreement, #communication').on('show.bs.modal', function (e) {
+
+                var button = $(e.relatedTarget);
+                var modal = $(this);
+
+                // load content from HTML string
+                //modal.find('.modal-body').html("Nice modal body baby...");
+
+                // or, load content from value of data-remote url
+                modal.find('.modal-body').load(button.data("remote"));
+            });
+        });
+
+
+        @if (result != null)
+        {
+            <text>
+            var alert = '<div class="alert alert-@(result.Succeed ? "success" : "danger") alert-dismissible text-center" role="alert">';
+            alert += '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+            alert += '<span aria-hidden="true">×</span>';
+            alert += '</button>';
+            alert += '<span>@result.Message</span>';
+            alert += '</div>';
+
+            $(".breadcrumb-area").after($(alert));
+            </text>
+        }
+
+
+
+        function Login(site) {
+            var actionName = "";
+            var data = "";
+            var uri = "";
+            var cnt = "";
+
+            if (site == 1) {
+                actionName = "LoginMod";
+                cnt = { email: $('#EmailMod').val(), pass: $('#PasswordMod').val() };
+            } else {
+                actionName = "SignMod";
+                cnt = { fullName: $('#FullNamePass').val(), email: $('#EmailPass').val(), pass: $('#NewPasswordPass').val(), newPass: $('#NewPasswordAgainPass').val(), agreement: $('#ConfirmAgreementPass').is(':checked') };
+            }
+            uri = "/account/" + actionName;
+            data = JSON.stringify(cnt);
+
+            $.ajax({
+                type: 'POST',
+                url: uri,
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: data,
+                success: function (data) {
+                    if (data.Succeed == false) {
+                        if (site == 1) { $('#lblMessage').html(data.Message); }
+                        else { $('#lblMessageSignUp').html(data.Message); }
+
+                    } else {
+                        if (site == 1) {
+                            //location.reload();
+                            $('#mdlLogin').modal('hide');
+                            $('#mdlInvoice').modal('show');
+                            SetInvoiceTypeInv();
+                        } else {
+                           ChangePage(1);
+                        }
+                    }
+                },
+                error: function (data) { $('#lblMessage').html(data.Message); }
+            });
+        }
+
+        function SaveInvoice() {
+            var actionName = "SaveInvoice";
+            cnt = { invoiceType: $('#InvoiceTypeInv').val(), personalID: $('#PersonalIDInv').val(), companyName: $('#CompanyNameInv').val(), taxOffice: $('#TaxOfficeInv').val(), taxNumber: $('#TaxNumberInv').val(), invoiceAddress: $('textarea#InvoiceAddressInv').val() };
+            uri = "/account/" + actionName;
+            data = JSON.stringify(cnt);
+
+            $.ajax({
+                type: 'POST',
+                url: uri,
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: data,
+                success: function (data) {
+                    if (data.Succeed == false) { $('#lblMessageInv').html(data.Message); }
+                    else { location.reload(); }
+                },
+                error: function (data) { $('#lblMessageInv').html(data.Message); }
+            });
+        }
+
+        function ChangePage(site) {
+            if (site == 1) {
+                $("#divLogin").show();
+                $("#divSignUp").hide();
+            } else {
+                $("#divLogin").hide();
+                $("#divSignUp").show();
+                $('#FullNamePass').val(""); $('#EmailPass').val(""); $('#NewPasswordPass').val(""); $('#NewPasswordAgainPass').val(""); $('#lblMessageSignUp').html("");
+            }
+        }
+
+        function SetInvoiceTypeInv() {
+            $("#individual").hide();
+            $("#corporate").hide();
+            var type = $("#InvoiceTypeInv").val();
+            if (type == "0") {
+                $("#individual").show();
+            }
+            else if (type == "1") {
+                $("#corporate").show();
+            }
+        }   
+
+    </script>
+    <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/9010317.js"></script>
+</body>
+</html>

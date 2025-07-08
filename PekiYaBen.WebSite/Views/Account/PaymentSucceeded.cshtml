@@ -1,0 +1,41 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+
+@{
+    ViewBag.Title = "Ödeme Başarılı";
+}
+
+<script>
+
+    fbq('track', 'Purchase', { value: 0.00, currency: 'TRY' });
+
+</script>
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h3 class="text-white">@ViewBag.Title</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content" class="section-padding ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <i class="fa fa-check fa-10x mb-2 text-success"></i>
+                    <p>Ödeme işleminiz başarılı oldu</p>
+                    <br />
+                    <p><a href="@Url.Action("MyProducts","Account")" class="btn btn-outline-primary bnt-sm">Satın Aldıklarım</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

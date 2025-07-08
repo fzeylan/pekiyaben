@@ -1,0 +1,430 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Helpers
+
+@model IEnumerable<Emoda.PekiYaBen.Entity.User.AppUserInfo>
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/Scripts/DataTables/datatables.min.css">
+    <style>
+        div.details-control {
+            width: 20px;
+            height: 20px;
+            background: url('https://raw.githubusercontent.com/DataTables/DataTables/1.10.7/examples/resources/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        .shown div.details-control {
+            background: url('https://raw.githubusercontent.com/DataTables/DataTables/1.10.7/examples/resources/details_close.png') no-repeat center center;
+        }
+
+        .json-key {
+            color: darkred;
+        }
+
+        .json-value {
+            color: blue;
+        }
+
+        .json-string {
+            color: forestgreen;
+        }
+    </style>
+}
+
+<table class="table table-striped" cellspacing="0" style="width: 100%" id="users">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Sat.Alm.</th>
+            <th>Ad Soyad</th>
+            <th>E-posta</th>
+            <th>Doğum Tarihi</th>
+            <th>Cinsiyet</th>
+            <th>Cep Telefonu</th>
+            <th>Meslek </th>
+            <th>Çalışma Durumu</th>
+            <th>Şehir</th>
+            <th>İltşm. İzn.</th>
+            <th>İltşm. İzn. Tar.</th>
+            <th>Son. Sat. Al.</th>
+            <th>Sosyal Medya</th>
+            <th>Kay. Tar.</th>
+            <th>Son Gir.</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"> </h4>
+            </div>
+            <div class="modal-body" style="word-break:break-all">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+@section scripts {
+    <script type="text/javascript">
+        var socialMediaList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.SocialMedia>()));
+        var genderList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.Gender>()));
+        var statusList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.Status>()));
+        var transactionStatusList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.TransactionStatus>()));
+        var occupationStatusList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.OccupationStatus>()));
+        var communicationPermission = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.CommunicationPermission>()));
+        function FindInList(list, property, value) {
+            var filtered = list.filter(function (list) { return eval("list." + property) == value });
+            if (filtered)
+                return filtered[0];
+            else
+                return null;
+        }
+
+        var library = {};
+        library.json = {
+            replacer: function (match, pIndent, pKey, pVal, pEnd) {
+                var key = '<span class=json-key>';
+                var val = '<span class=json-value>';
+                var str = '<span class=json-string>';
+                var r = pIndent || '';
+                if (pKey)
+                    r = r + key + pKey.replace(/[": ]/g, '') + '</span>: ';
+                if (pVal)
+                    r = r + (pVal[0] == '"' ? str : val) + pVal + '</span>';
+                return r + (pEnd || '');
+            },
+            prettyPrint: function (obj) {
+                var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+                return JSON.stringify(obj, null, 3)
+                    .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
+                    .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(jsonLine, library.json.replacer);
+            }
+        };
+
+    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.js"></script>
+    @*<script type="text/javascript" src="~/Scripts/DataTables/datatables.min.js"></script>*@
+
+    <script type="text/javascript">
+        var table;
+        var thead = "<tr><th>Sıra</th><th>Adı</th><th>Kodu</th><th>İşlem Kodu</th><th>Market</th><th>Fiyatı</th><th>Detay</th><th>Tarih</th><th>Durum</th></tr>";
+        $(function () {
+            // end example, if posted successful, can apply to datatables.net below
+            table = $('#users').DataTable(
+                {
+                    'rowCallback': function (row, data, index) {
+                        if (data.Gender == '0') {
+                            $(row).find('td:eq(5)').css('color', 'darkblue');
+                        }
+                        else {
+                            $(row).find('td:eq(5)').css('color', 'fuchsia');
+                        }
+                        if (data.OccupationStatus == '0') {
+                            $(row).find('td:eq(8)').css('color', 'red');
+                        }
+                        else {
+                            $(row).find('td:eq(8)').css('color', 'green');
+                        }
+
+                        if (data.CommunicationPermission == '0') {
+                            $(row).find('td:eq(10)').css('color', 'red');
+                        }
+                        else {
+                            $(row).find('td:eq(10)').css('color', 'green');
+                        }
+
+                        if (data.SocialMedia == '0') {
+                            $(row).find('td:eq(13)').css('color', 'darkblue');
+                        }
+                        else if (data.SocialMedia == '1'){
+                            $(row).find('td:eq(13)').css('color', 'red');
+                        }
+                        else if (data.SocialMedia == '2') {
+                            $(row).find('td:eq(13)').css('color', 'grey');
+                        }
+
+                        if (data.Status == '0') {
+                            $(row).find('td:eq(16)').css('color', 'red');
+                        }
+                        else {
+                            $(row).find('td:eq(16)').css('color', 'green');
+                        }
+                    },
+					scrollX: true,
+					responsive: true,
+                    fixedHeader: true,
+                    iDisplayLength: 100,
+                    sPaginationType: "full_numbers",
+                    processing: true,
+                    serverSide: true,
+                    "language": {
+                        "url": "/Scripts/DataTables/tr.json"
+                    },
+                    /*dom: 'Bfrtlip',
+                   buttons: [{
+                        extend: 'csvHtml5',
+                        text: 'Excel e aktar',
+                        fieldSeparator: ';'
+                    }],*/
+                    "lengthMenu": [
+                        [10, 25, 50, 100, 500, 1000],
+                        [10, 25, 50, 100, 500, 1000]
+                    ], //key-value
+                    "paging": true,
+                    "ordering": true,
+                    "order": [[14, "desc"]],
+                    "info": true,
+                    /*"responsive": {
+                        details: {
+                            renderer: function (api, rowIdx, columns) {
+                                var data = $.map(columns, function (col, i) {
+
+                                    var title = col.title//.substring(6, col.title.indexOf('</span>')); //<span>..</span>
+                                    return col.hidden ?
+                                        '<li data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                                        '<span class="dtr-title">' + title + ':' + '</span> ' +
+                                        '<span class="dtr-data">' + col.data + '</span>' +
+                                        '</li>' :
+                                        '';
+                                }).join('');
+
+                                return data ?
+                                    $('<ul data-dtr-index="' + rowIdx + '"/>').append(data) :
+                                    false;
+                            }
+                        }
+                    },*/
+                    ajax: {
+                        type: "POST",
+                        contentType: "application/json",
+                        url: '@Url.Action("GetUsers","Home")',
+                        data: function (d) {
+                            // note: d is created by datatable, the structure of d is the same with DataTableParameters model above
+                            return JSON.stringify(d);
+                        },
+                        dataFilter: function (res) {
+                            //var parsed = JSON.parse(res);
+                            return res;
+                        },
+                        error: function (x, y) {
+                            debugger;
+                            console.log(x);
+
+                        }
+                    },
+                    "columns": [
+                        {
+                            "data": "ProfilePhoto",
+                            "sType": "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return "<img src='data:image/png;base64," + data + "' class='profile-user-img' />";
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "LastPurchaseDate",
+                            "sType": "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return "<div class='details-control' />";
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "FullName",
+                            "sType": "string"
+                        }, {
+                            "data": "Email",
+                            "sType": "string"
+                        }, //to do : Sat. Sor
+                        {
+                            "data": "DateOfBirth",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null && data !='01.01.0001')
+                                    return moment(data).format('DD.MM.YYYY');
+                                return "";
+                            }
+                        }, {
+                            "data": "Gender",
+                            "sType": "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(genderList, "Key", data).Value;
+                                return "";
+                            }
+                        }, //to do : Onay
+                        {
+                            "data": "Phonenumber",
+                            "sType": "string"
+                        },
+                        {
+                            "data": "Occupation",
+                            "sType": "string"
+                        },
+                        {
+                            "data": "OccupationStatus",
+                            "sType": "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(occupationStatusList, "Key", data).Value;
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "City",
+                            "sType": "string"
+                        },
+                        {
+                            "data": "CommunicationPermission",
+                            "sType": "bool",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(communicationPermission, "Key", data).Value;
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "CommunicationPermissionUpdate",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return moment(data).format('DD.MM.YYYY HH:mm');
+                                return "";
+                            }
+                        }, {
+                            "data": "LastPurchaseDate",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return moment(data).format('DD.MM.YYYY');
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "SocialMedia",
+                            "sType": "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(socialMediaList, "Key", data).Value;
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "RegisterDate",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return moment(data).format('DD.MM.YYYY HH:mm');
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "LastLoginDate",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data != "0001-01-01T00:00:00" && data !== null)
+                                    return moment(data).format('DD.MM.YYYY HH:mm');
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "Status",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(statusList, "Key", data).Value;
+                                return "";
+                            }
+                        },
+
+                    ]
+                });
+        });
+
+        $('#users').on('click', 'div.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+                //$('div.slider', row.child()).slideUp(function () {
+                //    row.child.hide();
+                //    tr.removeClass('shown');
+                //});
+            } else {
+                // Open this row
+                getPayments(row.child, row.data().Id);
+                $('div.slider', row.child()).slideDown();
+                tr.addClass('shown');
+            }
+        });
+
+
+        function getPayments(callback, id) {
+            $.ajax({
+                url: '@Url.Action("GetPayments","Home")',
+                dataType: "json",
+                data: {
+                    userId: id
+                },
+                method: "GET",
+                complete: function (response) {
+                    var data = JSON.parse(response.responseText);
+
+                    var /*thead = '',*/ tbody = '';
+                    /*for (var key in data[0]) {
+                        thead += '<th>' + key + '</th>';
+                    }*/
+                    $.each(data, function (i, d) {
+                        var market = getMarket(d.MarketId);
+                        var detail = d.TransactionDetails.replace(/"/gi, "\"");
+                        tbody += "<tr><td>" + i + "<td>" + d.Title + "</td><td>" + d.Code + "</td><td>" + d.TransactionId + "</td><td style='color:" + market.color + "'>" + market.name + "</td><td>" + parseFloat(d.TransactionPrice).toFixed(2) + " TL</td><td><button class='btn btn-sm' onclick='ShowDetails(this);' data-title='" + d.Title + " (" + d.TransactionId + ")' data-message='" + detail + "'><i class='fa fa-search'></i></button><td nowrap>" + moment(d.TransactionDate).format("DD.MM.YYYY HH:SS") + "</td><td>" + FindInList(transactionStatusList, "Key", d.Status).Value; +"</td></tr>";
+                    });
+                    callback($('<div class="slider"><table class="w-100 table table-striped table-hover">' + thead + tbody + '</table></div>')).show();
+                },
+                error: function () {
+                    callback($('<div class="slider"><table class="table table-striped">' + thead + '</table></div>')).show();
+                }
+            });
+        }
+
+        function getMarket(marketId) {
+            var market = { color: "", name: "" };
+            if (marketId > 0) {
+                if (marketId == 1) {
+                    market.color = "#ef6c00";
+                    market.name = "Play Store";
+                }
+                else if (marketId == 2) {
+                    market.color = "#08f";
+                    market.name = "Apple Store";
+                }
+                else if (marketId == 3) {
+                    market.color = "#3aa51f";
+                    market.name = "PayTR";
+                }
+            }
+            return market;
+        }
+
+        function ShowDetails(obj) {
+            var title = $(obj).data("title");
+            var details = $(obj).data("message");
+            $(".modal-body").html(library.json.prettyPrint(details));
+            $(".modal-title").html(title);
+            $(".modal").modal('show')
+        }
+    </script>
+}

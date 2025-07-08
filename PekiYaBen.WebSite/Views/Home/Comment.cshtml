@@ -1,0 +1,133 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+@using PekiYaBen.WebSite.Extensions
+
+@model List<Comment>
+@{
+    ViewBag.Title = "Yorumlar";
+
+    var selectedCoach = (Coach)ViewBag.SelectedCoach;
+    var selectedProduct = (Product)ViewBag.SelectedProduct;
+    var products = (List<Product>)ViewBag.Products;
+
+}
+<div class="blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h2 class="text-white">@ViewBag.Title</h2>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            @*<li class="breadcrumb-item"><a href="/Kocluk-Ekibimiz">@ViewBag.Title</a></li>*@
+                            <li class="breadcrumb-item active">@selectedCoach.FullName</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="section blog-area ptb_100">
+        <div class="container">
+            <div class="row d-block">
+                <div class="col-12 col-lg-9 float-sm-right">
+                    <article class="single-blog-details">
+                        <!-- Blog Thumb -->
+                        <div class="reviewer media bg-gray p-4">
+                            <!-- Reviewer Thumb -->
+                            <div class="reviewer-thumb">
+                                <img class="avatar-lg radius-100" src="@selectedCoach.ProfilePhoto" alt="@selectedCoach.FullName" title="@selectedCoach.FullName">
+                            </div>
+                            <!-- Reviewer Media -->
+                            <div class="reviewer-meta media-body align-self-center ml-4">
+                                <h5 class="reviewer-name color-primary mb-2">@selectedCoach.FullName</h5>
+                                <h6 class="text-secondary fw-6">@selectedCoach.Title</h6>
+                            </div>
+                            <div>
+                                <a href="/Kocluk-Ekibimiz/@selectedProduct.Id/@selectedProduct.Title.FriendlyUrl()/@selectedCoach.Id/@selectedCoach.FullName.FriendlyUrl()" class="btn btn-outline-primary btn-sm mt-3"><i class="fa fa-search"></i> Detaylı Bilgi</a>
+                            </div>
+                        </div>
+                        <div class="blog-content sApp-blog">
+                            <div class="blog-details mt-4">
+                                <p class="d-block">@selectedCoach.Description</p>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            @foreach (var comment in Model)
+                            {
+                                string name = String.IsNullOrEmpty(comment.FullName) ? "" : comment.FullName.Split()[0];
+                                string surname = String.IsNullOrEmpty(comment.FullName) ? "" : comment.FullName.Split()[1];
+                                <div class="col-12 mb-lg-5 res-margin">
+                                    <!-- Single Review -->
+                                    <div class="single-review card">
+                                        <!-- Card Top -->
+                                        <div class="card-top p-4">
+
+                                            <div class="row">
+                                                <div class="col-2 text-center">
+                                                    <div class="reviewer-thumb">
+                                                        @comment.CreatedDate.Value.ToString("dd.MM.yyyy")<br><img class="avatar-lg radius-100" src="/Content/assets/img/avatar/default-1.png" alt="">
+                                                    </div><h6 class="reviewer-name color-primary mb-2">@name @surname.FirstOrDefault().</h6>
+
+                                                    <div class="review-icon">
+                                                        @for (int i = 0; i < comment.Stars; i++)
+                                                        {
+                                                            <span class="fa fa-star fa-w-18 text-warning"></span>
+                                                        }
+                                                    </div>
+                                                </div><div class="col-10">
+                                                    <h4 class="text-primary mb-3">@comment.Title</h4>
+                                                    <div class="review-text">
+                                                        <p>@comment.Comment1</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Review Text -->
+                                        </div>
+                                        <!-- Reviewer -->
+
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </article>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <aside class="sidebar">
+                        <!-- Single Widget -->
+                        <div class="single-widget">
+                            <!-- Category Widget -->
+                            <div class="accordions widget catagory-widget" id="cat-accordion">
+                                <div class="single-accordion blog-accordion">
+                                    <h5>
+                                        <a role="button" class="collapse show text-uppercase d-block p-3" data-toggle="collapse" href="#accordion1">
+                                            KOÇLUK TİPLERİ
+                                        </a>
+                                    </h5>
+                                    <!-- Category Widget Content -->
+                                    <div id="accordion1" class="accordion-content widget-content collapse show" data-parent="#cat-accordion">
+                                        <!-- Category Widget Items -->
+                                        <ul class="widget-items">
+                                            @foreach (var product in products)
+                                            {
+                                                if (product.Title.Contains("Atölye"))
+                                                {
+                                                    continue;
+                                                }
+                                                <li><a href="/Kocluk-Ekibimiz/@product.Id/@product.Title.FriendlyUrl()" class="d-flex p-3 @(product.Id == selectedProduct.Id ? "active" : "")"><span>@product.Title</span></a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </section>
+</div>

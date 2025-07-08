@@ -1,0 +1,164 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+@using PekiYaBen.WebSite.Extensions
+
+@model List<Coach>
+@{
+    ViewBag.Title = "Koçluk Görüşmeleri";
+
+    var products = (List<Product>)ViewBag.Products;
+    var selectedProduct = (Product)ViewBag.SelectedProduct;
+
+}
+<script>
+  fbq('track', 'ViewContent');
+</script>
+
+<div class="blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h2 class="text-white">@ViewBag.Title</h2>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="section blog-area ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-3">
+                    <aside class="sidebar">
+                        <!-- Single Widget -->
+                        <div class="single-widget">
+                            <!-- Category Widget -->
+                            <div class="accordions widget catagory-widget" id="cat-accordion">
+                                <div class="single-accordion blog-accordion">
+                                    <h5>
+                                        <a role="button" class="collapse show text-uppercase d-block p-3" data-toggle="collapse" href="#accordion1">
+                                            Uygulamalar
+                                        </a>
+                                    </h5>
+                                    <!-- Category Widget Content -->
+                                    <div id="accordion1" class="accordion-content widget-content collapse show" data-parent="#cat-accordion">
+                                        <!-- Category Widget Items -->
+                                        <ul class="widget-items">
+                                            <li><a href="/Kisisel-Durum-Analizi" class="d-flex p-3"><span>Kişisel Durum Analizi</span></a></li>
+                                            <li><a href="/Kisisel-Strateji-Belirleme" class="d-flex p-3"><span>Kişisel Strateji Belirleme</span></a></li>
+                                            <li><a href="/Bilincalti-Uygulamalari" class="d-flex p-3"><span>Bilinçaltı Uygulamaları</span></a></li>
+                                            <li><a href="/Kocluk-Gorusmeleri" class="d-flex p-3 active"><span>Koçluk Görüşmeleri</span></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+                <div class="col-12 col-lg-9">
+                    <div class="row">
+                        <div class="blog-details pb-2 w-100">
+                            <h3 class="blog-title py-2"><a href="#">Koçluk Görüşmeleri nedir?</a></h3>
+                            <p class="d-block py-2">
+                                <ul class="arrow-style ls1">
+                                    <li>Koçluk bir insanın kendini daha iyi tanımasına,</li>
+                                    <li>Kendi cevaplarını vermesine,</li>
+                                    <li>Kişisel farkındaliklarının artmasına,</li>
+                                    <li>Yeni bir beceri, yetkinlik veya davranış geliştirmesine,</li>
+                                    <li>Kendisi için belirlediği hedeflere erişmesine veya</li>
+                                    <li>Bir sorunu çözmesine</li>
+                                </ul>
+                                destek olma sürecidir.<br />
+                                <b>Profesyonel çerçevede ilerleyen bir yol arkadaşlığıdır.</b>
+                            </p>
+                        </div>
+                        <div class="blog-details pb-2 w-100">
+                            <h3 class="blog-title py-2"><a href="#">Koçluk ne değildir?</a></h3>
+                            <p class="d-block py-2">Koçluk tavsiye verme, terapi ya da psikolojik danışmanlık değildir.</p>
+                            <p class="d-block py-2">Kişinin geçmişine değil, geleceğine, hedeflerine odaklıdır</p>
+                        </div>
+
+                        <div class="blog-details pb-2 w-100">
+                            <h3 class="blog-title py-2"><a href="#">Hangi tiplerde koçluk sunuyoruz?</a></h3>
+                            <p class="d-block py-2">
+                                <b>Online Koçluk Modelleri</b>
+                                <ul class="arrow-style ls1">
+                                    <li>Öğrenci Koçu</li>
+                                    <li>Girişimci Koçu</li>
+                                    <li>İlişki Koçu</li>
+                                    <li>Kariyer Koçu</li>
+                                    <li>Kurumsal Koçluk</li>
+                                    <li>Quantum Koçu</li>
+                                    <li>Takım Koçu</li>
+                                    <li>Yaşam Koçu</li>
+                                    <li>Yazar Koçu</li>
+                                    <li>Yönetici Koçu</li>
+                                </ul>
+                                <br />
+                                <b>Online Kişisel Gelişim Atölyeleri</b>
+                                <ul class="arrow-style ls1">
+                                    <li>Çatışma Yönetimi</li>
+                                    <li>Enerji Tıbbı Uygulamaları</li>
+                                    <li>Etkili İletişim ve Liderlik</li>
+                                    <li>Etkili Takım Olma</li>
+                                    <li>H2Q Bütünsel Özfarkındalık</li>
+                                    <li>Kahkaha Koçluğu</li>
+                                    <li>Kendi Hayatının Koçu Ol</li>
+                                    <li>Kişisel SWOT Analizi</li>
+                                    <li>Koçvari Öğretmenlik</li>
+                                    <li>Mindfulness (Bilinçli Farkındalık)</li>
+                                    <li>Nefesle Hayat Atölyesi</li>
+                                    <li>Sabotajcımıza Özşefkat</li>
+                                    <li>Stresle Başetme ve Farkındalık</li>
+                                    <li>Zamanını Kim Yönetiyor?</li>
+                                </ul>
+                            </p>
+                        </div>
+
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Sistemde hangi koçlar yer alıyor?</a></h3>
+                            <p class="d-block py-2">
+                                <a href="/Kocluk-Ekibimiz">Koçluk ekibimizle ilgili detaylı bilgiye bu link tıklayarak ulaşabilirsiniz</a>
+                            </p>
+                        </div>
+
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Koçluk Görüşmeleri ne için yapılır?</a></h3>
+                            <p class="d-block py-2">Kişinin hayatındaki belirli kişisel süreçleri veya iş yaşamındaki hedefleri ele alır.</p>
+                            <p class="d-block py-2">Koçluk hizmetinin anlamlı ya da başarılı olması için kişinin değişime hazır ve istekli, kendisini ortaya koyma iradesine sahip olması gereklidir. Konfor alanından çıkmak da diyebiliriz.</p>
+                            <p class="d-block py-2">Koç, sadece belirlenmiş hedeflere değil, kişinin ilgili olduğu alanlarda onun gelişimine katkı sağlamak üzerine de çalışır.</p>
+                            <p class="d-block py-2">Bu hizmetten kesin sonuç alınacağı garanti edilememektedir.</p>
+                            <p class="d-block py-2">Kişinin elde etmek istediği sonuç, kişisel faktörlerine göre farklılaşabileceği gibi kendi çabası ve motivasyonuyla da doğrudan ilişkilidir.</p>
+
+                        </div>
+
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Koçluk Görüşmeleri'ne nasıl ulaşırım?</a></h3>
+                            <p class="d-block py-2">
+                                Uluslararası akredite eğitimlere sahip, alanında uzman ve deneyimli seçkin koçluk ekibimizin biyografilerini ve takvimlerini uygulamadan inceleyebilir, sana uygun koçluk ve atölye randevusunu hemen oluşturabilir, katılıma açık atölyelere kayıt olabilirsin.
+                            </p>
+                        </div>
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Koçluk Görüşmeleri nasıl yapılır?</a></h3>
+                            <p class="d-block py-2">
+                                Koçluk randevusu ve atölyeler için kayıtlı eposta adresine ZOOM linki gönderiyoruz.
+                            </p>
+                        </div>
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Koçluk Görüşmeleri ücreti nedir?</a></h3>
+                            <p class="d-block py-2">
+                                Tanıtım süresi boyunca online koçluk randevuları ve kişiye özel atölyeler <b>99.99 TL</b>, genel katılıma açık atölyeler <b>29.99 TL</b>'dir.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

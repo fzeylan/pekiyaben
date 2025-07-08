@@ -1,0 +1,169 @@
+﻿@using PekiYaBen.WebSite.Enums;
+@using PekiYaBen.WebSite.Extensions;
+@using PekiYaBen.WebSite.Models.EntityModels;
+
+@model List<CoachCalendarUser>
+
+@{
+    ViewBag.Title = "Randevularım";
+    var calendar = (List<CoachCalendar>)ViewBag.Calendar;
+    var coaches = (List<Coach>)ViewBag.Coaches;
+    var products = (List<Product>)ViewBag.Products;
+    var modifiedId = (int)ViewBag.ModifiedId;
+}
+
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h3 class="text-white">@ViewBag.Title</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content" class="section-padding ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card border-0">
+                        <div class="col-sm-12">
+                            @if (Model.Count > 0)
+                            {
+                                <table class="table m-b-0" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                    <tbody>
+                                        <tr>
+                                            <th class="border-0">#</th>
+                                            <th class="border-0">Koç</th>
+                                            <th class="border-0">Koçluk Tipi</th>
+                                            <th class="border-0">Tarih</th>
+                                            <th class="border-0">Durum</th>
+                                        </tr>
+                                        @{
+                                            var i = 1;
+                                            foreach (var interview in Model)
+                                            {
+                                                var cal = calendar.FirstOrDefault(x => x.Id == interview.CoachCalendarId);
+                                                if (cal != null)
+                                                {
+                                                    var coach = coaches.FirstOrDefault(x => x.Id == cal.CoachId);
+                                                    if (coach != null)
+                                                    {
+                                                        string statusColor = "";
+                                                        var status = (General.CoachInterviewStatus)interview.Status;
+                                                        if (status == General.CoachInterviewStatus.Active)
+                                                        {
+                                                            statusColor = "#d05252";
+                                                        }
+                                                        else if (status == General.CoachInterviewStatus.Booked)
+                                                        {
+                                                            statusColor = "#b3ae61";
+                                                        }
+                                                        else if (status == General.CoachInterviewStatus.Passive)
+                                                        {
+                                                            statusColor = "#75748a";
+                                                        }
+                                                        else if (status == General.CoachInterviewStatus.Completed)
+                                                        {
+                                                            statusColor = "#37a325";
+                                                        }
+
+                                                        bool isDeletable = status == General.CoachInterviewStatus.Booked && cal.AvailableDate > DateTime.Now.AddHours(24);
+                                                        bool IsEditable = status == General.CoachInterviewStatus.Booked && cal.AvailableDate > DateTime.Now.AddHours(4);
+
+                                                        var prods = coach.CoachingInfo.Split(',');
+                                                        var selectedProduct = products.FirstOrDefault(x => x.Title == prods.First());
+                                                        var makeMeeting = $"/randevu-takvimi/{selectedProduct.Id}/{selectedProduct.Title.FriendlyUrl()}/{coach.Id}/{coach.FullName.FriendlyUrl()}";
+
+                                                        var coachUrl = $"/Kocluk-Ekibimiz/{selectedProduct.Id}/{selectedProduct.Title.FriendlyUrl()}/{coach.Id}/{coach.FullName.FriendlyUrl()}";
+
+
+                                                        <tr>
+                                                            <td>@i</td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-sm-4 p-0"><a href="@coachUrl"><img class="avatar-lg radius-100" src="@coach.ProfilePhoto" alt="@coach.FullName" title="@coach.FullName" /></a></div>
+                                                                    <div class="col-sm-8 p-0"><a href="@coachUrl" class="text-primary">@coach.FullName</a></div>
+                                                                </div>
+                                                            </td>
+                                                            <td>@cal.InterviewType</td>
+                                                            <td><span class="@(modifiedId == interview.Id ? "highlight" : "")">@cal.AvailableDate</span></td>
+                                                            <td style="color:@statusColor">
+                                                                <span>@(status.GetDescription())</span><br />
+                                                                @if (status == General.CoachInterviewStatus.Active)
+                                                                {
+                                                                    <a href="@makeMeeting/yeni" class="btn btn-outline-primary btn-sm">
+                                                                        <i class="fa fa-calendar-alt"></i> Randevu Al
+                                                                    </a>
+                                                                }
+                                                                @if (IsEditable)
+                                                                {
+                                                                    <a href="@makeMeeting/duzenle/@interview.TransactionId" class="btn btn-outline-secondary btn-sm">
+                                                                        <i class="fa fa-calendar-day"></i> Tarihi değiştir
+                                                                    </a>
+                                                                }
+                                                                @if (isDeletable)
+                                                                {
+
+                                                                    <button class="btn btn-outline-secondary btn-sm" onclick="CancelMeeting(@cal.Id, '@selectedProduct.Title.FriendlyUrl()', @interview.TransactionId, '@Html.Raw(coach.FullName)', '@cal.AvailableDate.ToDayMonthYearHourMinute(false)','@cal.InterviewType')">
+                                                                        <i class="fa fa-calendar-times"></i> İptal Et
+                                                                    </button>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        i++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>Koçluk randevusu bulunamadı</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <script src="~/Content/assets/js/plugins/bootbox/bootbox.js"></script>
+    <script type="text/javascript">
+        function CancelMeeting(s, n, t, c, d, i) {
+            var confirmMessage = "<b>" + d + "'da " + c + " ile " + i + "</b> randevunuzu iptal etmek ister misiniz?";
+
+            bootbox.confirm(
+                {
+                    message: confirmMessage,
+                    buttons: {
+                        confirm: {
+                            label: 'Tamam',
+                        },
+                        cancel: {
+                            label: 'Vazgeç',
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+
+                            location.href = "/hesabim/randevu-iptal/" + s + "/" + n + "/" + t;
+                        }
+                    }
+                });
+        }
+
+    </script>
+}
+

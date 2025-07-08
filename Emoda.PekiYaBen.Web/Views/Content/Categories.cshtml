@@ -1,0 +1,101 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Helpers
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/Scripts/DataTables/datatables.min.css">
+}
+<div class="col-12">
+    <a href="/Content/EditCategory" class="btn btn-danger btn-sm"><i class="glyphicon-plus"></i> Yeni Kategori Ekle</a><br /><br />
+</div>
+<table class="table table-striped" cellspacing="0" style="width: 100%" id="categories">
+    <thead>
+        <tr>
+            <th>Başlık</th>
+            <th>Tür</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+@section scripts {
+    <script type="text/javascript">
+        var statusList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.Status>()));
+        var typeList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.ContentType>()));
+        function FindInList(list, property, value) {
+            var filtered = list.filter(function (list) { return eval("list." + property) == value });
+            if (filtered)
+                return filtered[0];
+            else
+                return null;
+        }
+    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.js"></script>
+    <script type="text/javascript">
+        var table;
+        $(function () {
+            table = $('#categories').DataTable(
+                {
+                    scrollX: true,
+                    responsive: true,
+                    fixedHeader: true,
+                    iDisplayLength: 100,
+                    processing: true,
+                    serverSide: true,
+                    filter: false,
+                    language: {
+                        url: "/Scripts/DataTables/tr.json"
+                    },
+                    lengthMenu: [
+                        [10, 25, 50, 100, 500, 1000],
+                        [10, 25, 50, 100, 500, 1000]
+                    ], //key-value
+                    paging: true,
+                    ordering: false,
+                    info: true,
+                    ajax: {
+                        type: "POST",
+                        contentType: "application/json",
+                        url: '@Url.Action("GetCategories", "Content")',
+                        data: function (d) {
+                            return JSON.stringify(d);
+                        },
+                        dataFilter: function (res) {
+                            return res;
+                        },
+                        error: function (x, y) {
+                            console.log(x);
+                        }
+                    },
+                    columns: [
+                        {
+                            data: "Title",
+                            sType: "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return "<a href='/Content/EditCategory/" + full.Id + "'>" + data + "</a>";
+                            }
+                        },
+                        {
+                            data: "Type",
+                            sType: "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(typeList, "Key", data).Value;
+                                return "";
+                            }
+                        },
+                        {
+                            data: "Status",
+                            sType: "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(statusList, "Key", data).Value;
+                                return "";
+                            }
+                        }
+                    ]
+                });
+        });
+    </script>
+}

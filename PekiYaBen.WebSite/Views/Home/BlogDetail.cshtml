@@ -1,0 +1,132 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels
+@using PekiYaBen.WebSite.Extensions
+@model Content
+@{
+    var categories = (List<ContentCategory>)ViewBag.Categories;
+    var coaches = (List<Coach>)ViewBag.Coaches;
+    var selectedContent = (ContentCategory)ViewBag.SelectedContent;
+    string typeName = Model.Type == 0 ? "Yazılar" : (Model.Type == 1 ? "Videolar" : "Podcastler");
+
+    ViewBag.Title = typeName;
+}
+
+@if (!String.IsNullOrEmpty(Model.MetaDescription))
+{
+    @section MetaDesc
+    {
+        <meta name="description" content="@Model.MetaDescription" />
+    }
+}
+
+@if (!String.IsNullOrEmpty(Model.MetaKeywords))
+{
+    @section MetaKeys
+    {
+        <meta name="keywords" content="@Model.MetaKeywords" />
+    }
+}
+
+<script>
+  fbq('track', 'ViewContent');
+</script>
+
+<div class="blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h2 class="text-white">@Model.Title</h2>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="blog" class="section blog-area ptb_100">
+        <div class="container">
+            <div class="row d-block">
+                <div class="col-12 col-lg-9 float-sm-right">
+                    <div class="row mb-5">
+                        @{
+                            var deatilUrl = $"/Kisisel-Gelisim/{typeName.FriendlyUrl()}/{selectedContent.Id}/{selectedContent.Title.FriendlyUrl()}/{Model.Id}/{Model.Title.FriendlyUrl()}";
+                        }
+                        <div class="col-12">
+                            <div class="single-blog res-margin">
+                                <div class="blog-thumb">
+                                    <a href="@deatilUrl">
+                                        <img class="img-fluid" src="@Url.Action("Thumbnail", "Home", new {path=Model.Image, width = 825, height = 500})" alt="@Model.Title">
+
+                                        @*<img src="@Model.Image" />*@
+                                    </a>
+                                </div>
+                                <div class="blog-content p-4">
+                                    <ul class="meta-info d-flex justify-content-between">
+                                        <li>@coaches.FirstOrDefault(x => x.Id == Model.CoachId).FullName</li>
+                                        <li>@Model.CreateDate.ToDayMonthYear()</li>
+                                    </ul>
+                                    <h3 class="blog-title my-3"><a href="#">@Model.Title</a></h3>
+                                    <p>
+                                        @Html.Raw(Model.Detail)
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    @*<div class="row">
+                            <div class="col-12">
+                                <ul class="pagination justify-content-center">
+                                    <li class="disabled px-1">
+                                        <a href="#" aria-label="Previous">
+                                            <i class="fas fa-arrow-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="px-1"><a href="#">1</a></li>
+                                    <li class="active px-1"><a href="#">2</a></li>
+                                    <li class="px-1"><a href="#">3</a></li>
+                                    <li>
+                                        <a href="#" aria-label="Next">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="col-12 col-lg-3">
+                    <aside class="sidebar">
+                        <div class="single-widget">
+                            <div class="accordions widget catagory-widget" id="cat-accordion">
+                                <div class="single-accordion blog-accordion">
+                                    <h5>
+                                        <a role="button" class="collapse show text-uppercase d-block p-3" data-toggle="collapse" href="#accordion1">
+                                            KATEGORİLER
+                                        </a>
+                                    </h5>
+                                    <!-- Category Widget Content -->
+                                    <div id="accordion1" class="accordion-content widget-content collapse show" data-parent="#cat-accordion">
+                                        <!-- Category Widget Items -->
+                                        <ul class="widget-items">
+                                            @foreach (var category in categories)
+                                            {
+                                                var url = $"/Kisisel-Gelisim/{typeName.FriendlyUrl()}/{category.Id}/{category.Title.FriendlyUrl()}";
+                                                <li><a href="@url" class="d-flex p-3 @(category.Id == selectedContent.Id ? "active" : "")"><span>@category.Title</span></a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </section>
+</div>

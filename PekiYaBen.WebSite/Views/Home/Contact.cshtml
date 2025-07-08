@@ -1,0 +1,142 @@
+﻿@{
+    ViewBag.Title = "İletişim";
+    var message = (string)ViewBag.Message;
+}
+
+
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h2 class="text-white">@ViewBag.Title</h2>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact" class="contact-area bg-gray ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <!-- Section Heading -->
+                    <div class="section-heading">
+                        <h2>İletişim</h2>
+                        <p class="d-none d-sm-block mt-4">Peki Ya Ben uygulaması ile ilgili her türlü görüş, öneri ve şikayetinizi iletişim kanallarımızdan veya iletişim formu üzerinden iletebilirsiniz.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-between">
+                <div class="col-12 col-md-5">
+                    <!-- Contact Us -->
+                    <div class="contact-us">
+                        <ul>
+                            <li class="py-2">
+                                <div class="social-icon mr-3">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <span class="media-body align-self-center">Yalı Mah. 6523 Sok. No:22 D:24 Karşıyaka / İzmir</span>
+                            </li>
+                            <li class="py-2">
+                                <a class="media" href="tel:90 532 740 78 14">
+                                    <div class="social-icon mr-3">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </div>
+                                    <span class="media-body align-self-center">+90 532 740 78 14</span>
+                                </a>
+                            </li>
+                            <li class="py-2">
+                                <a class="media" href="https://wa.me/905327407814">
+                                    <div class="social-icon mr-3">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </div>
+                                    <span class="media-body align-self-center">+90 532 740 78 14</span>
+                                </a>
+                            </li>
+                            <li class="py-2">
+                                <a class="media" href="mailto:iletisim@pekiyaben.com">
+                                    <div class="social-icon mr-3">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <span class="media-body align-self-center">iletisim@pekiyaben.com</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 pt-4 pt-md-0">
+                    <!-- Contact Box -->
+                    <div class="contact-box text-center">
+                        <p class="form-message text-danger">@message</p>
+                        <form role="form" name="contactform" id="contactform" method="post">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="name" placeholder="Ad Soyad" required="required" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="email" class="form-control" name="email" placeholder="E-posta" required="required" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="phone" placeholder="Telefon" required="required" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="message" placeholder="Mesaj" required="required"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="g-recaptcha" data-sitekey="6LdTjHkdAAAAAMbbhhGcxLKpTewHJOmZ1xTEnxsF"></div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-lg btn-block mt-3" id="btnSubmit"><span class="text-white pr-3"><i class="fas fa-paper-plane"></i></span>Gönder</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section map-area">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12493.936705715607!2d27.0780678!3d38.4764683!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xacb5132d8cd00a3f!2zVE7EsEE!5e0!3m2!1str!2str!4v1599119145387!5m2!1str!2str" width="100" height="100" style="border:0;" allowfullscreen=""></iframe>
+    </section>
+
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script>
+       
+
+            var onloadCallback = function () {
+                grecaptcha.render('g-recaptcha', {
+                    'sitekey': '6LdTjHkdAAAAAMbbhhGcxLKpTewHJOmZ1xTEnxsF',
+                    'callback': correctCaptcha
+                });
+            };
+
+            var correctCaptcha = function (response) {
+
+                $.post("Home/ReCaptchaPassed", { gRecaptchaResponse: response }, function (result) {
+
+                });
+
+
+                alert(response);
+            };
+
+
+    </script>
+</div>
+
+
+
+
+
+
+

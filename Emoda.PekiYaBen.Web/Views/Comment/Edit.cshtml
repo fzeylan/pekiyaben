@@ -1,0 +1,88 @@
+﻿
+@using Emoda.PekiYaBen.Entity.Comment
+
+@model CommentInfo
+@{
+    var coaches = (List<SelectListItem>)ViewBag.Coaches;
+    var products = (List<SelectListItem>)ViewBag.Products;
+    var stars = (List<SelectListItem>)ViewBag.Stars;
+
+}
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            @using (Html.BeginForm("Edit", "Comment", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.Id)
+                <div class="box-body">
+                    <div class="form-group col-sm-4">
+                        <label for="CoachId">Koç Seçiniz</label>
+                        @Html.DropDownListFor(m => m.CoachId, new SelectList(coaches, "Value", "Text"), "Koç Seçiniz", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.CoachId)
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="ProductId">Ürün</label>
+                        @Html.DropDownListFor(m => m.ProductId, new SelectList(products, "Value", "Text"), "Ürün Seçiniz", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.ProductId)
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="FullName">Müşteri Adı Soyadı</label>
+                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", @maxlength = "100" })
+                        @Html.ValidationMessageFor(m => m.FullName)
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="Title">Yorum Başlığı</label>
+                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control", @maxlength = "100" })
+                        @Html.ValidationMessageFor(m => m.Title)
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="Stars">Yorum Puanı</label>
+                        @Html.DropDownListFor(m => m.Stars, new List<SelectListItem> {
+                                     new SelectListItem{Text="1", Value="1" },
+                                     new SelectListItem{Text="2", Value="2"},
+                                     new SelectListItem{Text="3", Value="3"},
+                                     new SelectListItem{Text="4", Value="4"},
+                                     new SelectListItem{Text="5", Value="5", Selected =true}
+                                }, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Stars)
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="CreatedDate">Yorum Zamanı</label>
+                        <div class='input-group date' id='dueDatePicker'>
+                            @Html.TextBoxFor(m => m.CreatedDate, new { @class = "form-control" })
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="Comment">Yorum</label>
+                        @Html.TextAreaFor(m => m.Comment, new { @class = "form-control", @maxlength = "400" })
+                        @Html.ValidationMessageFor(m => m.Comment)
+                    </div>
+                </div>
+                <div class="box-footer text-right">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Kaydet</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript" src="/Scripts/bootstrap-datetimepicker.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script type="text/javascript">
+        
+        $(document).ready(function () {
+            $('#dueDatePicker').datetimepicker({
+                format: 'MM.DD.YYYY'
+            });
+        });
+    </script>
+}
+
+

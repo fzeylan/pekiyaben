@@ -1,0 +1,96 @@
+﻿@using PekiYaBen.WebSite.Enums;
+@using PekiYaBen.WebSite.Extensions;
+@using PekiYaBen.WebSite.Models.EntityModels;
+
+@model List<Transaction>
+
+@{
+    ViewBag.Title = "Satın Aldıklarım";
+    var products = (List<Product>)ViewBag.Products;
+
+    Dictionary<string, string> statusColorList = new Dictionary<string, string>();
+    statusColorList.Add("0", "#e13f2a");
+    statusColorList.Add("1", "#19a5c9");
+    statusColorList.Add("10", "#c9ae19");
+}
+
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h3 class="text-white">@ViewBag.Title</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content" class="section-padding ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card border-0">
+                        <div class="col-sm-12">
+                            @if (Model.Count > 0)
+                            {
+                                <table class="table m-b-0" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                    <tbody>
+                                        <tr>
+                                            <th class="border-0">#</th>
+                                            <th class="border-0">Adı</th>
+                                            <th class="border-0">Tarih</th>
+                                            <th class="border-0">Tutar</th>
+                                            <th class="border-0">Durum</th>
+                                        </tr>
+                                        @{
+                                            var i = 1;
+                                            foreach (var transaction in Model)
+                                            {
+                                                var product = products.FirstOrDefault(x => x.Id == transaction.ProductId);
+                                                if (product != null)
+                                                {
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td>
+                                                            <h6>@product.Title</h6>
+                                                            <small>@product.Description</small>
+                                                        </td>
+                                                        <td>@transaction.TransactionDate</td>
+                                                        <td>@transaction.TransactionPrice.ToString("#0.00") TL</td>
+                                                        <td style="color:@statusColorList[transaction.Status.ToString()]">
+                                                            @(((General.TransactionStatus)transaction.Status).GetDescription())
+                                                            @if (product.Type == 3 && (General.TransactionStatus)transaction.Status==General.TransactionStatus.Active)
+                                                            {
+                                                                <a href="/online-kocluk-ve-atolye/@product.Id/@product.Title.FriendlyUrl()" class="btn btn-outline-primary btn-sm ml-3">
+                                                                    <i class="fa fa-calendar-alt"></i> Randevu Al
+                                                                </a>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    i++;
+                                                }
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>Satın aldığınız bir ürün bulunamadı</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+}

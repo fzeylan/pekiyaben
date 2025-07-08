@@ -1,0 +1,415 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Helpers
+
+@model IEnumerable<Emoda.PekiYaBen.Entity.User.AppUserInfo>
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/Scripts/DataTables/datatables.min.css">
+    <style>
+        div.details-control {
+            width: 20px;
+            height: 20px;
+            background: url('https://raw.githubusercontent.com/DataTables/DataTables/1.10.7/examples/resources/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        .shown div.details-control {
+            background: url('https://raw.githubusercontent.com/DataTables/DataTables/1.10.7/examples/resources/details_close.png') no-repeat center center;
+        }
+
+        .json-key {
+            color: darkred;
+        }
+
+        .json-value {
+            color: blue;
+        }
+
+        .json-string {
+            color: forestgreen;
+        }
+    </style>
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Tüm alanları doldurunuz</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form" id="notificationForm">
+                <div class="box-body">
+                    @*<div class="form-group">
+                        <div class='input-group date' id='dueDatePicker'>
+                            <input type='text' name="dueDate" class="form-control" value="@DateTime.Now.ToString("dd.MM.yyyy HH:mm")" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>*@
+                    <div class="form-group">
+                        <label for="txtTitle">Başlık</label>
+                        <input type="text" class="form-control" id="txtTitle" name="title" placeholder="Bildirim başlığı" onkeyup="$('#letterCountTitle').html($(this).val().length)">
+                        <small>Uzunluk : <span id="letterCountTitle">0</span></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtMessage">Mesaj</label>
+                        <input type="text" class="form-control" id="txtMessage" name="message" placeholder="Kısa mesaj" onkeyup="$('#letterCountMessage').html($(this).val().length)" />
+                        <small>Uzunluk : <span id="letterCountMessage">0</span></small>
+                    </div>
+                    <div id="userTableContainer">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="SelectAll()">Tümünü Seç/Seçme</button><br /><br />
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-primary"  onclick="SendAllMessages()" id="btnHepsiniGonder">Hepsini Gönder</button>
+                        </div>
+                        <table class="table table-striped" cellspacing="0" style="width: 100%" id="users">
+                            <thead>
+                                <tr>
+                                    <th>Ad Soyad</th>
+                                    <th>E-posta</th>
+                                    <th>Doğum Tarihi</th>
+                                    <th>Cinsiyet</th>
+                                    <th>Cep Telefonu</th>
+                                    <th>Meslek </th>
+                                    <th>Çalışma Durumu</th>
+                                    <th>Şehir</th>
+                                    <th>İltşm. İzn.</th>
+                                    <th>İltşm. İzn. Tar.</th>
+                                    <th>Son. Sat. Al.</th>
+                                    <th>Sosyal Medya</th>
+                                    <th>Kay. Tar.</th>
+                                    <th>Durum</th>
+                                    <th>Seç</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary">Gönder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        var socialMediaList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.SocialMedia>()));
+        var genderList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.Gender>()));
+        var statusList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.Status>()));
+        var transactionStatusList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.TransactionStatus>()));
+        var occupationStatusList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.OccupationStatus>()));
+        var communicationPermission = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(EnumerationExtensions.ToList2<General.CommunicationPermission>()));
+        function FindInList(list, property, value) {
+            var filtered = list.filter(function (list) { return eval("list." + property) == value });
+            if (filtered)
+                return filtered[0];
+            else
+                return null;
+        }
+
+        var library = {};
+        library.json = {
+            replacer: function (match, pIndent, pKey, pVal, pEnd) {
+                var key = '<span class=json-key>';
+                var val = '<span class=json-value>';
+                var str = '<span class=json-string>';
+                var r = pIndent || '';
+                if (pKey)
+                    r = r + key + pKey.replace(/[": ]/g, '') + '</span>: ';
+                if (pVal)
+                    r = r + (pVal[0] == '"' ? str : val) + pVal + '</span>';
+                return r + (pEnd || '');
+            },
+            prettyPrint: function (obj) {
+                var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+                return JSON.stringify(obj, null, 3)
+                    .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
+                    .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(jsonLine, library.json.replacer);
+            }
+        };
+    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.js"></script>
+    <script type="text/javascript" src="/Scripts/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript">
+        var table;
+        var rows_selected = [];
+        var selected = false;
+        $(function () {
+            // end example, if posted successful, can apply to datatables.net below
+            table = $('#users').DataTable(
+                {
+                    'rowCallback': function (row, data, index) {
+                        if (data.Gender == '0') {
+                            $(row).find('td:eq(3)').css('color', 'darkblue');
+                        }
+                        else {
+                            $(row).find('td:eq(3)').css('color', 'fuchsia');
+                        }
+                        if (data.OccupationStatus == '0') {
+                            $(row).find('td:eq(6)').css('color', 'red');
+                        }
+                        else {
+                            $(row).find('td:eq(6)').css('color', 'green');
+                        }
+
+                        if (data.CommunicationPermission == '0') {
+                            $(row).find('td:eq(8)').css('color', 'red');
+                        }
+                        else {
+                            $(row).find('td:eq(8)').css('color', 'green');
+                        }
+
+                        if (data.SocialMedia == '0') {
+                            $(row).find('td:eq(11)').css('color', 'darkblue');
+                        }
+                        else {
+                            $(row).find('td:eq(11)').css('color', 'red');
+                        }
+
+                        if (data.Status == '0') {
+                            $(row).find('td:eq(13)').css('color', 'red');
+                        }
+                        else {
+                            $(row).find('td:eq(13)').css('color', 'green');
+                        }
+                    },
+                    fixedHeader: true,
+                    iDisplayLength: 100,
+                    sPaginationType: "full_numbers",
+                    processing: true,
+                    serverSide: true,
+                    "language": {
+                        "url": "/Scripts/DataTables/tr.json"
+                    },
+                    /*dom: 'Bfrtlip',
+                    buttons: [{
+                        extend: 'csvHtml5',
+                        text: 'Excel e aktar',
+                        fieldSeparator: ';'
+                    }],*/
+                    "lengthMenu": [
+                        [10, 25, 50, 100, 500, 1000],
+                        [10, 25, 50, 100, 500, 1000]
+                    ], //key-value
+                    "paging": true,
+                    "ordering": true,
+                    ajax: {
+                        type: "POST",
+                        contentType: "application/json",
+                        url: '@Url.Action("GetNotificationUsers", "Home")',
+                        data: function (d) {
+                            // note: d is created by datatable, the structure of d is the same with DataTableParameters model above
+                            return JSON.stringify(d);
+                        },
+                        dataFilter: function (res) {
+                            //var parsed = JSON.parse(res);
+                            return res;
+                        },
+                        error: function (x, y) {
+                            debugger;
+                            //console.log(x);
+
+                        }
+                    },
+                    "columns": [
+                        {
+                            "data": "FullName",
+                            "sType": "string"
+                        }, {
+                            "data": "Email",
+                            "sType": "string"
+                        }, //to do : Sat. Sor
+                        {
+                            "data": "DateOfBirth",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null && data != '0001-01-01T00:00:00')
+                                    return moment(data).format('DD.MM.YYYY');
+                                return "";
+                            }
+                        }, {
+                            "data": "Gender",
+                            "sType": "number",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(genderList, "Key", data).Value;
+                                return "";
+                            }
+                        }, //to do : Onay
+                        {
+                            "data": "Phonenumber",
+                            "sType": "number"
+                        },
+                        {
+                            "data": "Occupation",
+                            "sType": "string"
+                        },
+                        {
+                            "data": "OccupationStatus",
+                            "sType": "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(occupationStatusList, "Key", data).Value;
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "City",
+                            "sType": "string"
+                        },
+                        {
+                            "data": "CommunicationPermission",
+                            "sType": "bool",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(communicationPermission, "Key", data).Value + (data == 0 ? ", Siparişi var" : "")
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "CommunicationPermissionUpdate",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null && data != '0001-01-01T00:00:00')
+                                    return moment(data).format('DD.MM.YYYY');
+                                return "";
+                            }
+                        }, {
+                            "data": "LastPurchaseDate",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return moment(data).format('DD.MM.YYYY');
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "SocialMedia",
+                            "sType": "string",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(socialMediaList, "Key", data).Value;
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "RegisterDate",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return moment(data).format('DD.MM.YYYY HH:mm');
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "Status",
+                            "sType": "date",
+                            render: function (data, type, full, meta) {
+                                if (data !== "" && data !== null)
+                                    return FindInList(statusList, "Key", data).Value;
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "Id",
+                            targets: 0,
+                            orderable: false,
+                            render: function (data, type, row) {
+                                if (type === 'display') {
+                                    if (rows_selected.includes(data.FCMToken)) {
+                                        return '<input type="checkbox" class="editor-active" checked>';
+                                    }
+                                    else
+                                        return '<input type="checkbox" class="editor-active">';
+                                }
+                                return data;
+                            },
+
+                            className: "dt-body-center"
+                        },
+                    ]
+                });
+        });
+
+        $("#notificationForm").submit(function (e) {
+
+            e.preventDefault(); // <-- add this
+            var formElement = document.querySelector("#notificationForm");
+            var data = {};
+            new FormData(formElement).forEach(function (value, key) {
+                data[key] = value;
+            });
+            data.users = rows_selected;
+
+            var url = formElement.action;
+
+            $.post(url, data, function (data) {
+                if (!data.error)
+                    alert("Bildirim gönderim işlemi tamamlandı");
+                else
+                    alert("Bildirim gönderim sırasında hata oluştu:" + data.error);
+            });
+        });
+
+        $('#users tbody').on('click', 'input[type="checkbox"]', function (e) {
+            var $row = $(this).closest('tr');
+
+            // Get row data
+            var data = table.row($row).data();
+            //console.log(data);
+            // Get row ID
+            var userId = data.FCMToken;
+
+            // Determine whether row ID is in the list of selected row IDs
+            var index = $.inArray(userId, rows_selected);
+
+            // If checkbox is checked and row ID is not in list of selected row IDs
+            if (this.checked && index === -1) {
+                rows_selected.push(userId);
+
+                // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+            } else if (!this.checked && index !== -1) {
+                rows_selected.splice(index, 1);
+            }
+
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        function objectifyForm(formArray) {//serialize data function
+
+            var returnArray = {};
+            for (var i = 0; i < formArray.length; i++) {
+                returnArray[formArray[i]['name']] = formArray[i]['value'];
+            }
+            return returnArray;
+        }
+
+        function SelectAll() {
+            $('#users tbody input[type="checkbox"]').click()
+        }
+
+        function SendAllMessages() {
+            $('#btnHepsiniGonder').hide();
+            $.post("@Url.Action("SendAllMessages", "Home")", { title: $("#txtTitle").val(), message: $("#txtMessage").val() }, function (result) {
+                if (result != null) {
+                    if (result.Error == null) {
+                        alert("Bildirim gönderi işlemi başarılı...");
+                    } else {
+                        alert("Bildirim gönderi işlemi sırasında sorun oluştu. " + result.Error);
+                    }
+                }
+                else {
+                    alert("Bildirim gönderim sırasında hata oluştu");
+                    
+                }
+                $('#btnHepsiniGonder').show();
+            });
+        }
+    </script>
+}

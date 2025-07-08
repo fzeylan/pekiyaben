@@ -1,0 +1,77 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Helpers
+
+@model IEnumerable<Emoda.PekiYaBen.Entity.User.AppUserInfo>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-striped">
+            <tr>
+                <td style="width:150px">Koçluk Saati</td>
+                <td><input id="KoclukSaati" style="width:250px" value="@ViewBag.KoclukSaati" /></td>
+                <td style="width:150px"><button onclick="saveGenParameters('KoclukSaati')"> Güncelle</button></td>
+            </tr>
+            <tr>
+                <td>Kullanıcı</td>
+                <td><input id="Kullanici" style="width:250px" value="@ViewBag.Kullanici" /></td>
+                <td><button onclick="saveGenParameters('Kullanici')"> Güncelle</button></td>
+            </tr>
+            <tr>
+                <td>Saat Atölye</td>
+                <td><input id="SaatAtolye" style="width:250px" value="@ViewBag.SaatAtolye" /></td>
+                <td><button onclick="saveGenParameters('SaatAtolye')"> Güncelle</button></td>
+            </tr>
+            <tr>
+                <td>Ülke</td>
+                <td><input id="Ulke" style="width:250px" value="@ViewBag.Ulke" /></td>
+                <td><button onclick="saveGenParameters('Ulke')"> Güncelle</button></td>
+            </tr>
+            <tr>
+                <td>Ana Sayfa Videosu</td>
+                <td><input id="MainPageVideo" style="width:800px" value="@ViewBag.MainPageVideo" type="text"/></td>
+                <td><button onclick="saveGenParameters('MainPageVideo')"> Güncelle</button></td>
+            </tr>
+            <tr>
+                <td>Ana Sayfa Başlık</td>
+                <td><input id="AnaSayfaBaslik" style="width:800px" value="@ViewBag.AnaSayfaBaslik" /></td>
+                <td><button onclick="saveGenParameters('AnaSayfaBaslik')"> Güncelle</button></td>
+            </tr>
+            <tr>
+                <td>Ana Sayfa Alt Açıklama</td>
+                <td><input id="AnaSayfaAltAciklama" style="width:800px" value="@ViewBag.AnaSayfaAltAciklama" /></td>
+                <td><button onclick="saveGenParameters('AnaSayfaAltAciklama')"> Güncelle</button></td>
+            </tr>
+        </table>
+    </div>
+    
+
+
+</div>
+
+
+@section scripts {
+   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/sc-2.0.2/sl-1.3.1/datatables.min.js"></script>
+    @*<script type="text/javascript" src="~/Scripts/DataTables/datatables.min.js"></script>*@
+
+    <script type="text/javascript">
+        function saveGenParameters(parameter) {
+            var value = document.getElementById(parameter).value;
+            $.ajax({
+                url: '@Url.Action("SaveGeneralParameters","Home")',
+                dataType: "json",
+                data: {
+                    parameter: parameter,
+                    value : value
+                },
+                method: "POST",
+                complete: function (response) {
+                    alert("Başarı ile kaydedilmiştir.");
+                },
+                error: function () {
+                }
+            });
+        }
+    </script>
+}

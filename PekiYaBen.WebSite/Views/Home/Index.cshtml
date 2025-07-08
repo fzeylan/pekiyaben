@@ -1,0 +1,517 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+@using PekiYaBen.WebSite.Extensions
+
+@model List<Coach>
+
+@{
+    ViewBag.Title = "Online Koçluk Platformu";
+    var products = (List<Product>)ViewBag.Products;
+    var lastContent = (Content)ViewBag.LastContent;
+    var lastContentCoach = (Coach)ViewBag.LastContentCoach;
+    var selectedCategory = (ContentCategory)ViewBag.SelectedCategory;
+}
+@*<link href="~/Content/assets/js/slick/slick.css" rel="stylesheet" />*@
+@*<link href="~/Content/assets/js/slick/slick-theme.css" rel="stylesheet" />*@
+
+
+
+<!-- ***** Welcome Area Start ***** -->
+<section id="home" class="section welcome-area bg-overlay overflow-hidden d-flex align-items-center">
+    <div class="container h-100">
+        <div class="row align-items-center h-100">
+            <div class="col-12">
+                <div class="welcome-intro">
+                    <h1 class="text-white">
+                        @ViewBag.AnaSayfaBaslik
+                    </h1>
+                    <p class="my-4 text-white" style="width:600px">
+                        @Html.Raw(@ViewBag.AnaSayfaAltAciklama)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section counter-area pt-4 pb-3">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-5 col-sm-3 single-counter text-center">
+                <div class="counter-inner p-3 p-md-0">
+                    <!-- Counter Item -->
+                    <div class="counter-item d-inline-block mb-3">
+                        <span class="counter fw-7">@ViewBag.KoclukSaati</span>
+                    </div>
+                    <h5>Saat Koçluk</h5>
+                </div>
+            </div>
+            <div class="col-5 col-sm-3 single-counter text-center">
+                <div class="counter-inner p-3 p-md-0">
+                    <!-- Counter Item -->
+                    <div class="counter-item d-inline-block mb-3">
+                        <span class="counter fw-7">@ViewBag.Kullanici</span>
+                    </div>
+                    <h5>Kullanıcı</h5>
+                </div>
+            </div>
+            <div class="col-5 col-sm-3 single-counter text-center">
+                <div class="counter-inner p-3 p-md-0">
+                    <!-- Counter Item -->
+                    <div class="counter-item d-inline-block mb-3">
+                        <span class="counter fw-7">@ViewBag.SaatAtolye</span>
+                    </div>
+                    <h5>Saat Atölye</h5>
+                </div>
+            </div>
+            <div class="col-5 col-sm-3 single-counter text-center">
+                <div class="counter-inner p-3 p-md-0">
+                    <!-- Counter Item -->
+                    <div class="counter-item d-inline-block mb-3">
+                        <span class="counter fw-7">@ViewBag.Ulke</span>
+                    </div>
+                    <h5>Ülke</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="features" class="section features-area ptb_50">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-6">
+                <!-- Section Heading -->
+                <div class="section-heading text-center">
+                    <h2>Peki Ya Ben'de Neler Var?</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-4">
+                <!-- Icon Box -->
+                <div class="icon-box text-center p-4">
+                    <!-- Featured Icon -->
+                    <div class="featured-icon mb-3">
+                        <img src="/Content/assets/img/icon/KisiselDurumAnalizi.png">
+                    </div>
+                    <!-- Icon Text -->
+                    <div class="icon-text">
+                        <h3 class="mb-2 ">Kişisel Durum Analizi</h3>
+                        <p>
+                            Gerçekleşmesini istediğin bir hayalin,<br>ulaşmak istediğin bir hedefin var, ama nasıl başlayacağını, nasıl ilerleyeceğini belirleyemiyorsan <b>Kişisel Durum Analizi</b>'ni mobil cihazından hemen deneyebilirsin.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4">
+                <!-- Icon Box -->
+                <div class="icon-box text-center p-4">
+                    <!-- Featured Icon -->
+                    <div class="featured-icon mb-3">
+                        <img src="/Content/assets/img/icon/KisiselStratejiBelirleme.png">
+                    </div>
+                    <!-- Icon Text -->
+                    <div class="icon-text">
+                        <h3 class="mb-2">Kişisel Strateji Belirleme</h3>
+                        <p>
+                            Seni sen yapan değerler,<br>
+                            Gelecekteki "Sen"<br>
+                            Varoluş amacın<br>
+                            Hepsi ve daha fazlası <b>Kişisel Strateji Belirleme</b> ile mobil cihazında.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4">
+                <!-- Icon Box -->
+                <div class="icon-box text-center p-4">
+                    <!-- Featured Icon -->
+                    <div class="featured-icon mb-3">
+                        <img src="/Content/assets/img/icon/BilincaltiUygulamalari.png">
+                    </div>
+                    <!-- Icon Text -->
+                    <div class="icon-text">
+                        <h3 class="mb-2">Bilinçaltı Uygulamaları</h3>
+                        <p>Bilinçaltına yerleşik olan olumsuz kayıtların yerine olumlu kayıtlar yüklemek ve blokajlarından arınman için theta frekansında özel metinler ile hazırlanmış olan ses kayıtlarını mobil cihazından hemen dinlemeye başlayabilirsin.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4">
+                <!-- Icon Box -->
+                <div class="icon-box text-center p-4">
+                    <!-- Featured Icon -->
+                    <div class="featured-icon mb-3">
+                        <img src="/Content/assets/img/icon/KoclukGorusmeleri.png">
+                    </div>
+                    <!-- Icon Text -->
+                    <div class="icon-text">
+                        <h3 class="mb-2">Koçluk Görüşmeleri</h3>
+                        <p>Peki Ya Ben Ekibinde yer alan Uluslararası akredite eğitimlere sahip, her biri kendi alanında uzman ve deneyimli, seçkin koçlar ile online koçluk görüşmelerine hemen başlayabilirsin.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4">
+                <!-- Icon Box -->
+                <div class="icon-box text-center p-4">
+                    <!-- Featured Icon -->
+                    <div class="featured-icon mb-3">
+                        <img src="/Content/assets/img/icon/KisiselGelisimAtolyesi.png">
+
+                    </div>
+                    <!-- Icon Text -->
+                    <div class="icon-text">
+                        <h3 class="mb-2">Kişisel Gelişim Atölyeleri</h3>
+                        <p>Peki Ya Ben Ekibinde yer alan Uluslararası akredite eğitimlere sahip, her biri kendi alanında uzman ve deneyimli seçkin koçlar ile online kişisel gelişim atölyelerine hemen başlayabilirsin</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4 m-auto">
+                <!-- Icon Box -->
+                <div class="icon-box text-center p-4">
+                    <!-- Featured Icon -->
+                    <div class="featured-icon mb-3">
+                        <img src="/Content/assets/img/icon/sertifika.png">
+                    </div>
+                    <!-- Icon Text -->
+                    <div class="icon-text">
+                        <h3 class="mb-2">Sertifika Programı</h3>
+                        <p>Profesyonel Koçluk, Eğiticinin Eğitimi, Anlayarak Hızlı Okuma Uzmanlık alanlarımızı sizlerle paylaşıyoruz.Hemen katılın, kazanacağınız yepyeni yetkinlikler ile rakiplerinize fark atın.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-12 col-md-12 col-xs-12">
+                @Html.Raw(ViewBag.MainPageVideo)
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="browse-categories section bg-gray ptb_50">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-6">
+                <div class="section-heading text-center">
+                    <h2>Koçluk Tipleri</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row slider responsive">
+            @foreach (var product in products.Where(x => !x.Title.Contains("Atölye") && !x.Title.Contains("Sertifika Programı")))
+            {
+                var productTitle = product.Title;
+
+                var url = $"/kocluk/{product.Id}/{product.Title.FriendlyUrl()}";
+
+                <div class="m-2">
+                    <a href="@url" class="img-box">
+                        <div class="img-box-content">
+                            <h4>@product.Title</h4>
+                        </div>
+                        <div class="img-box-background">
+                            @if (product.ContentImage != null)
+                            {
+                                <img class="img-fluid" src="@Url.Action("Thumbnail", "Home", new {path=product.ContentImage, width = 269, height = 269})" alt="@product.Title">
+                            }
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<section class="browse-categories section ptb_50">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-6">
+                <div class="section-heading text-center">
+                    <h2>Atölyeler</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row slider responsive">
+            @foreach (var product in products.Where(x => x.Title.StartsWith("Atölye") || x.Title.StartsWith("Genel Atölye")))
+            {
+                var productTitle = product.Title;
+                if (productTitle.StartsWith("Atölye"))
+                {
+                    productTitle = productTitle.Replace("Atölye - ", "").Trim();
+                }
+                else
+                {
+                    productTitle = productTitle.Replace("Genel Atölye - ", "").Trim();
+                }
+
+                var url = $"/atolye/{product.Id}/{product.Title.FriendlyUrl()}";
+
+                <div class="m-2">
+                    <a href="@url" class="img-box">
+                        <div class="img-box-content">
+                            <h4>@productTitle</h4>
+                        </div>
+                        <div class="img-box-background">
+                            @if (product.ContentImage != null)
+                            {
+                                <img class="img-fluid" src="@Url.Action("Thumbnail", "Home", new {path=product.ContentImage, width = 269, height = 269})" alt="@product.Title">
+                            }
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<section class="browse-categories section ptb_50">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-6">
+                <div class="section-heading text-center">
+                    <h2>Sertifika Programları</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row slider responsive">
+            @foreach (var product in products.Where(x => x.Title.StartsWith("Sertifika Programı")))
+            {
+                var productTitle = product.Title;
+
+                productTitle = productTitle.Replace("Sertifika Programı - ", "").Trim();
+                var url = $"/sertifika/{product.Id}/{product.Title.FriendlyUrl()}";
+
+                <div class="m-2">
+                    <a href="@url" class="img-box">
+                        <div class="img-box-content">
+                            <h4>@productTitle</h4>
+                        </div>
+                        <div class="img-box-background">
+                            @if (product.ContentImage != null)
+                            {
+                                <img class="img-fluid" src="@Url.Action("Thumbnail", "Home", new {path=product.ContentImage, width = 269, height = 269})" alt="@product.Title">
+                            }
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<section class="section work-area overflow-hidden ptb_50">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-6">
+                <div class="work-content text-center">
+                    <h2 style="color: #19a5c9">Peki Ya Ben?</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row  mt-4">
+            <div class="col-12 col-md-4">
+                <div class="work-icon text-center" style="margin-bottom: 10px; width:100%; display:flex; justify-content:center">
+                    <div style="border-radius: 50px; background-color: #19a5c9; padding:20px; width:90px; display:table">
+                        <i class="fa fa-user-alt text-white fa-4x"></i>
+                    </div>
+                </div>
+                <div class="single-work text-center p-4" style="border-radius: 10px; background-color: #19a5c9; height:165px">
+                    <h3 style="background-color: white; color: #19a5c9; border-radius:3px; ; padding:10px">Profil Oluşturun</h3>
+                    <p class="text-white" style="margin-top:10px">Mobil cihazınızla uyumlu Peki Ya Ben mobil uygulamasından veya web sitemizden üyelik profilinizi oluşturun.</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="work-icon text-center" style="margin-bottom: 10px; width:100%; display:flex; justify-content:center">
+                    <div style="border-radius: 50px; background-color: #19a5c9; padding: 20px; width: 90px; display: table ">
+                        <i class="fa fa-search text-white fa-4x"></i>
+                    </div>
+                </div>
+                <div class="single-work text-center p-4" style="border-radius: 10px; background-color: #19a5c9; height: 165px">
+                    <h3 style="background-color: white; color: #19a5c9; border-radius:3px; ; padding:10px">Koçluk veya Atölye Seçin</h3>
+                    <p class="text-white" style="margin-top:10px">Koçluk tiplerimiz veya atölyelerimizden size en uygun olanı seçin.</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="work-icon text-center" style="margin-bottom: 10px; width:100%; display:flex; justify-content:center">
+                    <div style="border-radius: 50px; background-color: #19a5c9; padding: 20px; width: 90px; display: table ">
+                        <i class="fa fa-calendar-alt text-white fa-4x"></i>
+                    </div>
+                </div>
+                <div class="single-work text-center p-4" style="border-radius: 10px; background-color: #19a5c9; height: 165px">
+                    <h3 style="background-color: white; color: #19a5c9; border-radius:3px; ; padding:10px">Randevu Oluşturun</h3>
+                    <p class="text-white" style="margin-top:10px">Peki Ya Ben'in size sunduğu ürün ve hizmetleri deneyimleyin, kişisel gelişiminizi üst düzeye çıkarın.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section pt-4 bg-gray">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-6">
+                <div class="section-heading text-center">
+                    <h2>Koçluk Ekibimiz</h2>
+                    <p class="d-none d-sm-block mt-4">Türkiye'nin lider koçluk ekibi ile tanışın</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                @foreach (var coach in Model)
+                {
+                    var prods = coach.CoachingInfo.Split(',');
+                    var selectedProduct = products.FirstOrDefault(x => x.Title == prods.First());
+                    if (selectedProduct != null)
+                    {
+                        var url = $"/Kocluk-Ekibimiz/{selectedProduct.Id}/{selectedProduct.Title.FriendlyUrl()}/{coach.Id}/{coach.FullName.FriendlyUrl()}";
+                        <div class="coaches bg-white">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-xs-12">
+                                    <div class="job-company-logo">
+                                        <a href="@url"><img src="@coach.ProfilePhoto" alt="@coach.FullName" title="@coach.FullName" /></a>
+                                    </div>
+                                    <div class="job-details">
+                                        <h3>@coach.FullName</h3>
+                                        <span class="title mb-5">
+                                            @coach.Title
+                                        </span><br />
+                                        <a href="@url" class=" text-primary">
+                                            <i class="fa fa-search"></i> Öz Geçmişi
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8 col-md-6 col-xs-12">
+                                    @coach.Description
+                                    <div class="text-right">
+                                        <a href="@url" class="btn btn-outline-primary btn-sm">
+                                            <i class="fa fa-calendar-alt"></i> @(coach.Status == 1 ? "Randevu Al" : "Detaylı Bilgi")
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section service-area overflow-hidden ptb_50">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-6">
+                <div class="section-heading text-center">
+                    <h2>Kişisel Gelişim</h2>
+                    <p class="d-none d-sm-block mt-4">
+                        <a href="@Url.Action("Blog", "Home")" class="btn btn-outline-primary btn-sm">Yazılar</a> <a href="@Url.Action("Video", "Home")" class="btn btn-outline-primary btn-sm">Videolar</a> <a href="@Url.Action("Podcast", "Home")" class="btn btn-outline-primary btn-sm">Podcastler</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        @{
+            var typeName = selectedCategory.Type == 0 ? "Yazılar" : (selectedCategory.Type == 1 ? "Videolar" : "Podcastler");
+            var contentUrl = $"/Kisisel-Gelisim/{typeName.FriendlyUrl()}/{selectedCategory.Id}/{selectedCategory.Title.FriendlyUrl()}/{lastContent.Id}/{lastContent.Title.FriendlyUrl()}";
+        }
+
+        <div class="row justify-content-between">
+            <div class="col-12 col-lg-4 d-none d-lg-block">
+                <div class="blog-thumb">
+                    <a href="@contentUrl">
+                        <img src="@lastContent.Image" />
+                        @if (lastContent.Type > 0)
+                        {
+                            <div class="ovl">
+                                <i class="fa @(lastContent.Type == 1 ? "fa-play" : "fa-volume-up") fa-10x"></i>
+                            </div>
+                        }
+                    </a>
+                </div>
+            </div>
+            @{ var categoryUrl = $"/Kisisel-Gelisim/{typeName.FriendlyUrl()}/{selectedCategory.Id}/{selectedCategory.Title.FriendlyUrl()}"; }
+            <div class="col-12 col-lg-8">
+                <div class="blog-content h-100">
+                    <h3 class="blog-title"><a href="@contentUrl">@lastContent.Title</a></h3>
+                    <ul class="meta-info d-flex mb-3">
+                        <li class="mr-3">@lastContentCoach.FullName</li>
+                        <li class="mr-3"><a href="@categoryUrl">@selectedCategory.Title</a></li>
+                        <li class="mr-3">@lastContent.CreateDate.ToDayMonthYear()</li>
+                    </ul>
+                    <p>
+                        @Html.Raw(lastContent.Summary)
+                    </p>
+                    <a href="@contentUrl" class="btn btn-outline-primary btn-sm mt-3">Devamı</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="section download-area overlay-dark ptb_50">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-9">
+                <div class="download-text text-center">
+                    <h2 class="text-white">Peki Ya Ben'i Hemen Yükle</h2>
+                    <p class="text-white my-3 d-none d-sm-block">
+                        Senin için buradayız...<br />
+                        Kendini Keşfet, Farket ve Yaşa!<br />
+                        Hepsi ve Daha Fazlası için hemen yükle!
+                    </p>
+                    <div class="button-group store-buttons d-flex justify-content-center">
+                        <a href="https://play.google.com/store/apps/details?id=com.emoda.pekiyaben" target="_blank">
+                            <img src="/content/assets/img/icon/google-play-white.png" alt="">
+                        </a>
+                        <a href="https://itunes.apple.com/tr/app/peki-ya-ben/id1326616376?l=tr&mt=8" target="_blank">
+                            <img src="/content/assets/img/icon/app-store-white.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <img src="~/content/assets/img/features/thumb-1.png" class="w-100">
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <script src="~/Content/assets/js/slick/slick.min.js"></script>
+
+    <script type="text/javascript">
+        $('.responsive').slick({
+            dots: true,
+            infinite: false,
+            speed: 300,
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        });
+
+
+    </script>
+}

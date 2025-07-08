@@ -1,0 +1,226 @@
+﻿@using PekiYaBen.WebSite.Extensions;
+@using PekiYaBen.WebSite.Models.EntityModels;
+
+@model Coach
+
+@{
+    ViewBag.Title = "Randevu Takvimi";
+    Product selectedProduct = (Product)ViewBag.SelectedProduct;
+
+    string url = $"/randevu-takvimi/{selectedProduct.Id}/{selectedProduct.Title.FriendlyUrl()}/{Model.Id}/{Model.FullName.FriendlyUrl()}";
+    string operation = (string)ViewBag.Operation;
+    int transactionId = (int)ViewBag.TransactionId;
+
+}
+
+@section styles{
+    <link href="~/Content/assets/js/plugins/fullcalendar/main.css" rel="stylesheet" />
+}
+
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h3 class="text-white">@ViewBag.Title</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content" class="section-padding ptb_50">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3 p-0">
+                                    <div class="coaches bg-white shadow-none">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-xs-12 p-0">
+                                                <div class="float-left mr-3">
+                                                    <a href="@url"><img class="avatar-lg radius-100" src="@Model.ProfilePhoto" alt="@Model.FullName" title="@Model.FullName"></a>
+                                                </div>
+                                                <div class="float-left pt-3">
+                                                    <h3><a href="url">@Model.FullName</a></h3>
+                                                    <span class="title">
+                                                        @Model.Title
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-9">
+                                    <p>
+                                        Online koçluk seansları ve atölyeler “Zoom” uygulaması ile yapılmaktadır. Randevu aldıktan sonra kayıtlı eposta adresinize Peki Ya Ben tarafından “Zoom” bağlantısı gönderilmektedir. <br />
+                                        Mobil cihazınız veya bilgisayarınız ile dilediğiniz yerden seansa katılabilirsiniz.<br /><br />
+                                    </p>
+                                    <ul>
+                                        <li>&bull; Randevu saatinden 2 saat öncesine kadar randevu günü ve saatinizi değiştirebilirsiniz.</li>
+                                        <li>&bull; Online seansın başında randevunuz olan koç ile başka bir koçluk modelinde görüşme yapmak istediğinizi belirtebilirsiniz.</li>
+                                        <li>&bull; Tüm ödemeler PayTR güvencesi ile yapılmaktadır. PekiYaBen tarafından kredi kartı bilgileriniz istenmez ve kaydedilmez.</li>
+                                        <li>&bull; Randevular ile ilgili sormak istedikleriniz için 05327407814 numaralı telefondan iletişime geçebilirsiniz.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <script src="~/Content/assets/js/plugins/moment/moment.min.js"></script>
+    <script src="~/Content/assets/js/plugins/fullcalendar/main.js"></script>
+    <script src="~/Content/assets/js/plugins/bootbox/bootbox.js"></script>
+    <script type="text/javascript">
+        var calendar;
+
+        $(document).ready(function () {
+
+            var calendarEl = document.getElementById('calendar');
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: ''
+                },
+
+                allDaySlot: false,
+                height: 'auto',
+                views: {
+                    timeGridSevenDay: {
+                        type: 'timeGrid',
+                        duration: { days: 7 },
+                        buttonText: '7 day'
+                    }
+                },
+                locale: 'tr',
+                nowIndicator:true,
+                initialView: 'timeGridSevenDay',
+                initialDate: new Date(),
+                navLinks: true,
+                selectable: false,
+                eventClick: function (arg) {
+                    if (arg.event.overlap == true) {
+                        moment.locale("tr");
+                        var eventTime = moment(arg.event.start).format("DD MMMM yyy HH:mm");
+                        var confirmMessage = "<b>" + eventTime + "'da @Model.FullName ile @selectedProduct.Title </b> randevusu oluşturmak ister misiniz?";
+                        @if(operation == "duzenle")
+                        {
+                            <text>
+                            confirmMessage = "Mevcut randevunuzu <b>" + eventTime + "</b> olarak değiştirmek ister misiniz?";
+                            </text>
+                        }
+
+
+                        $.ajax({
+                            type: 'POST',
+                            url: "/account/AuthenticatedUser",
+                            dataType: 'json',
+                            contentType: "application/json; charset=utf-8",
+                            success: function (data) {
+                                if (data.Succeed == false) {
+                                    $('#mdlLogin').modal('show');
+                                } else {
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: "/account/FindInvoice",
+                                        dataType: 'json',
+                                        contentType: "application/json; charset=utf-8",
+                                        success: function (data) {
+                                            if (data.Succeed == false) {
+                                                $('#mdlInvoice').modal('show');
+                                                SetInvoiceTypeInv();
+                                            } else {
+
+                                                bootbox.confirm(
+                                                {
+                                                    message: confirmMessage,
+                                                    buttons: {
+                                                        confirm: {
+                                                            label: 'Tamam',
+                                                        },
+                                                        cancel: {
+                                                            label: 'Vazgeç',
+                                                        }
+                                                    },
+                                                    callback: function (result) {
+                                                        if (result) {
+
+                                                            @if(operation=="yeni") {
+                                                                <text>
+                                                                location.href = "/hesabim/randevu-al/" + arg.event.id + "/@(selectedProduct.Title.FriendlyUrl() + (transactionId > 0 ? "/" + transactionId : ""))";
+                                                                </text>
+                                                            }
+                                                            else if(operation == "duzenle")
+                                                            {
+                                                                <text>
+                                                            location.href = "/hesabim/randevu-duzenle/" + arg.event.id + "/@(selectedProduct.Title.FriendlyUrl() + (transactionId > 0 ? "/" + transactionId : ""))";
+                                                                </text>
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (data) {}
+                                    });
+
+                                }
+                            },
+                            error: function (data) {}
+                        });
+
+
+
+                    }
+                },
+                selectMirror: true,
+                slotMinTime: '06:00:00',
+                slotDuration: '01:00:00',
+                editable: false,
+                dayMaxEvents: false,
+            });
+
+
+            calendar.render();
+            getEvents();
+        });
+
+        function getEvents() {
+            $.post("/musait-randevular", {
+                id:@Model.Id,
+                product:'@Html.Raw(selectedProduct.Title)',
+                dateStart: moment(calendar.view.currentStart).format("YYYY-MM-DD HH:mm")
+            }, function (result) {
+
+                $('.fc-prev-button.fc-button').off("click").on("click", function () {
+                    getEvents();
+                });
+
+                $('.fc-next-button.fc-button').off("click").on("click", function () {
+                    getEvents();
+                });
+
+                calendar.removeAllEvents();
+                calendar.addEventSource(result);
+            });
+        }
+    </script>
+}

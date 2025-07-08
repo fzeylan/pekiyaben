@@ -1,0 +1,37 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+
+@model Product
+@{
+    ViewBag.Title = "Randevu Düzenle";
+    var showPayment = (bool)ViewBag.ShowPayment;
+}
+
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h3 class="text-white">@ViewBag.Title</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content" class="section-padding ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>Bir sorun oluştu, işleme devam edemiyoruz.</p>
+                    <div class="clearfix"></div>
+                    <p><a href="javascript:history.go(-1);" class="btn btn-outline-primary bnt-sm"><i class="fa fa-calendar"></i> Randevu Takvimine Dön</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

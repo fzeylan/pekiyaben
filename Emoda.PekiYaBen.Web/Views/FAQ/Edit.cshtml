@@ -1,0 +1,64 @@
+﻿
+@using Emoda.PekiYaBen.Entity.FAQ
+
+@model FAQInfo
+
+@section styles{
+    <link href="~/Content/summernote/summernote-lite.min.css" rel="stylesheet" />
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            @using (Html.BeginForm("Edit", "FAQ", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.Id)
+            <div class="box-body">
+                <div class="form-group col-sm-4">
+                    <label for="Title">Sıra No</label>
+                    @Html.TextBoxFor(m => m.SortOrder, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.SortOrder)
+                </div>
+                <div class="form-group col-sm-8">
+                    <label for="Status">Durum</label>
+                    @Html.EnumDropDownListFor(m => m.Status, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Status)
+                </div>
+                <div class="form-group col-sm-12">
+                    <label for="Title">SSS Başlık</label>
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control", @maxlength = "500" })
+                    @Html.ValidationMessageFor(m => m.Title)
+                </div>
+                <div class="form-group col-sm-12">
+                    <label for="Description">İçerik</label>
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+                </div>
+            </div>
+                <div class="box-footer text-right">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Kaydet</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Html.Partial("_ValidationScriptsPartial");
+    <script src="~/Content/summernote/summernote-lite.js"></script>
+    <script src="~/Content/summernote/lang/summernote-tr-TR.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#Description').summernote({
+                lang: 'tr-TR',
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'fontsize']],
+                    ['color', ['color', 'forecolor']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['height']],
+                    ['link', ['link']],
+                    ['picture', ['picture']]
+                ],
+                height: 300
+            });
+        });
+    </script>
+}

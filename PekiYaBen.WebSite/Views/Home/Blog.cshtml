@@ -1,0 +1,147 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels
+@using PekiYaBen.WebSite.Extensions
+@model List<Content>
+@{
+    var categories = (List<ContentCategory>)ViewBag.Categories;
+    var coaches = (List<Coach>)ViewBag.Coaches;
+    var selectedContent = (ContentCategory)ViewBag.SelectedContent;
+    var type = (int)ViewBag.Type;
+    int pageCount = (int)ViewBag.Pagecount;
+    int linkPerPage = 4;
+    if (pageCount > linkPerPage)
+    {
+        pageCount /= linkPerPage;
+    }
+    else
+    {
+        pageCount = 1;
+    }
+
+    int currentPage = (int)ViewBag.Page;
+    string pageLink = ViewBag.PageLink;
+    string typeName = type == 0 ? "Yazılar" : (type == 1 ? "Videolar" : "Podcastler");
+
+    ViewBag.Title = typeName;
+
+}
+
+<script>
+  fbq('track', 'ViewContent');
+</script>
+
+<div class="blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h2 class="text-white">@ViewBag.YazarAdi @ViewBag.Title</h2>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="blog" class="section blog-area ptb_100">
+        <div class="container">
+            <div class="row d-block">
+                <div class="col-12 col-lg-9 float-sm-right">
+                    <div class="row mb-5">
+                        @foreach (var content in Model)
+                        {
+                            var url = $"/Kisisel-Gelisim/{typeName.FriendlyUrl()}/{selectedContent.Id}/{selectedContent.Title.FriendlyUrl()}/{content.Id}/{content.Title.FriendlyUrl()}";
+                            <div class="col-12 col-md-6 mb-4">
+                                <div class="single-blog res-margin h-100">
+                                    <div class="blog-thumb">
+                                        <a href="@url">
+                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Home", new {path=content.Image, width = 398, height = 241})" alt="@content.Title">
+
+                                            @*<img src="@content.Image" />*@
+                                            @if (content.Type > 0)
+                                            {
+                                                <div class="ovl">
+                                                    <i class="fa @(content.Type == 1 ? "fa-play" : "fa-volume-up") fa-10x"></i>
+                                                </div>
+                                            }
+                                        </a>
+                                    </div>
+                                    <div class="blog-content p-4 h-100">
+                                        <ul class="meta-info d-flex justify-content-between">
+                                            <li>@coaches.FirstOrDefault(x => x.Id == content.CoachId).FullName</li>
+                                            <li>@content.CreateDate.ToDayMonthYear()</li>
+                                        </ul>
+                                        <h3 class="blog-title my-3"><a href="@url">@content.Title</a></h3>
+                                        <p>
+                                            @Html.Raw(content.Summary)
+                                        </p>
+                                        <a href="@url" class="btn btn-outline-primary btn-sm mt-3">Devamı</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="pagination justify-content-center">
+                                @for (int i = 0; i < pageCount; i++)
+                                {
+                                    var pagingUrl = pageLink + (i + 1);
+                                    <li class="px-1 @(i==(currentPage-1)?"active":"")"><a href="@pagingUrl"> @(i+1)</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <aside class="sidebar">
+                        <div class="single-widget">
+                            <div class="accordions widget catagory-widget" id="cat-accordion">
+                                <div class="single-accordion blog-accordion">
+                                    <h5>
+                                        <a role="button" class="collapse show text-uppercase d-block p-3" data-toggle="collapse" href="#accordion1">
+                                            KATEGORİLER
+                                        </a>
+                                    </h5>
+                                    <!-- Category Widget Content -->
+                                    <div id="accordion1" class="accordion-content widget-content collapse show" data-parent="#cat-accordion">
+                                        <!-- Category Widget Items -->
+                                        <ul class="widget-items">
+                                            @foreach (var category in categories)
+                                            {
+                                                string url = $"/Kisisel-Gelisim/{typeName.FriendlyUrl()}/{category.Id}/{category.Title.FriendlyUrl()}";
+                                                if (ViewBag.YazarId != null)
+                                                {
+                                                    url = $"/Kisisel-Gelisim/{typeName.FriendlyUrl()}/{category.Id}/{category.Title.FriendlyUrl()}/{ViewBag.YazarId}/yazar_{ViewBag.YazarAdi}";
+                                                }
+
+                                                <li><a href="@url" class="d-flex p-3 @(category.Id == selectedContent.Id ? "active" : "")"><span>@category.Title</span></a></li>
+                                            }
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+
+                @if (ViewBag.YazarId != null)
+                {
+
+                    var url = type == 0 ? "/Kisisel-Gelisim/Yazilar" : (type == 1 ? "/Kisisel-Gelisim/Videolar" : "/Kisisel-Gelisim/Podcastler");
+                    <div class="col-12 col-lg-3">
+                        <a href="@url" class="btn btn-outline-primary mt-3"><i class="fa fa-users"></i> Bütün Yazarları Görüntüle</a>
+
+                    </div>
+
+                }
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,135 @@
+﻿@using PekiYaBen.WebSite.Models.EntityModels;
+@using PekiYaBen.WebSite.Extensions
+
+@model List<Coach>
+@{
+    ViewBag.Title = "Bilinçaltı Uygulamaları";
+
+    var products = (List<Product>)ViewBag.Products;
+    var selectedProduct = (Product)ViewBag.SelectedProduct;
+
+}
+<script>
+  fbq('track', 'ViewContent');
+</script>
+
+<div class="blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h2 class="text-white">@ViewBag.Title</h2>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="section blog-area ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-3">
+                    <aside class="sidebar">
+                        <!-- Single Widget -->
+                        <div class="single-widget">
+                            <!-- Category Widget -->
+                            <div class="accordions widget catagory-widget" id="cat-accordion">
+                                <div class="single-accordion blog-accordion">
+                                    <h5>
+                                        <a role="button" class="collapse show text-uppercase d-block p-3" data-toggle="collapse" href="#accordion1">
+                                            Uygulamalar
+                                        </a>
+                                    </h5>
+                                    <!-- Category Widget Content -->
+                                    <div id="accordion1" class="accordion-content widget-content collapse show" data-parent="#cat-accordion">
+                                        <!-- Category Widget Items -->
+                                        <ul class="widget-items">
+                                            <li><a href="/Kisisel-Durum-Analizi" class="d-flex p-3"><span>Kişisel Durum Analizi</span></a></li>
+                                            <li><a href="/Kisisel-Strateji-Belirleme" class="d-flex p-3"><span>Kişisel Strateji Belirleme</span></a></li>
+                                            <li><a href="/Bilincalti-Uygulamalari" class="d-flex p-3 active"><span>Bilinçaltı Uygulamaları</span></a></li>
+                                            <li><a href="/Kocluk-Gorusmeleri" class="d-flex p-3"><span>Koçluk Görüşmeleri</span></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+                <div class="col-12 col-lg-9">
+                    <div class="row">
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Bilinçaltı Uygulamaları nedir?</a></h3>
+                            <p class="d-block py-2">Tüm yol haritanı çizmiş olsan da çoğu zaman birçoğumuzda olduğu gibi blokajlarımızdan, geçmişten gelen öğrenmelerimiz, atalarımızdan bize miras kalan olumsuz kayıtlarız, bilinç düzeyinde beynimizin sürekli vesvese üretmesi gibi nedenlerle ilerleyemediğimiz olur.</p>
+                            <p class="d-block py-2">Aslında çözümü çok kolay.</p>
+                            <p class="d-block py-2">Özel metinlerle theta frekansında hazırlanan bilinçaltı ses kayıtlarını 21 gün dinle 7 gün ara ver modeli ile tüm bu olumsuz kayıtların yerine olumlu kayıtları yükleyebilirsin.</p>
+                        </div>
+
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Ses kayıtları ne işe yarar?</a></h3>
+                            <p class="d-block py-2">Bilinçaltında yer alan olumsuz kayıtlar yerine olumlu kayıtlar yüklemesi yapılarak blokajlardan arınabilirsin. </p>
+                        </div>
+
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Hangi ses kayıtları var?</a></h3>
+                            <p class="d-block py-2">
+                                <ul class="arrow-style ls1">
+                                    <li>Hedeflerini Gerçekleştir (Kullanıcılarımıza özel, ücretsiz)</li>
+                                    <li>Affet & Özgürleş</li>
+                                    <li>Bolluk & Bereket</li>
+                                    <li>Sağlıklı Kilo Verme</li>
+                                    <li>Mutlu İlişkiler</li>
+                                    <li>Odaklanma</li>
+                                    <li>Özgüven</li>
+                                    <li>Pozitif Enerji</li>
+                                    <li>Rahat Bir Uyku</li>
+                                    <li>Sigara Bırakma</li>
+                                    <li>Sınav Kaygısı</li>
+                                    <li>Topluluk Önünde Konuşma</li>
+                                </ul>
+                            </p>
+                        </div>
+
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Ses Kayıtları nasıl dinlenir?</a></h3>
+                            <p class="d-block py-2">Affet ve Özgürleş ses kaydını, gün içerisinde sessiz sakin bir ortamda, rahat bir pozisyonda dinleyebilirsin. Diğer kayıtlardan farklı olarak metin bilinçli zihninin duyabileceği şekilde seslendirilmiş ve kaydedilmiştir. İlk kez Atalardan Bağ Koparma, Affet ve Özgürleş seansına katılıyorsan, ihtiyaç hissetmen halinde 10 gün sonra veya 1 ay sonra tekrar dinleyebilirsin. </p>
+                            <p class="d-block py-2">Dinleme sırasında beyninde canlandırmalar yapman çalışmadan tam fayda sağlamana yardımcı olacaktır. Dinlediğin ortamda gül kokulu mum, gül kokusu, gül bulundurabilirsin</p>
+                            <p class="d-block py-2">
+                                Diğer tüm ses kayıtlarını gece uykuya dalmadan hemen önce başlayarak gece boyunca aşağıdaki takvimi takip ederek dinleyebilirsin.
+                                <ul class="arrow-style ls1">
+                                    <li>21 Gün Dinle 7 Gün Ara Ver</li>
+                                    <li>21 Gün Dinle 7 Gün Ara Ver</li>
+                                    <li>21 Gün Dinle ve bitti.</li>
+                                </ul>
+                                Modeli ile hemen dinlemeye başlayabilirsin.
+                                <br />
+                                Gece boyunca uykuda dinlenmesi gerekir.<br />
+                                Gün içerisinde herhangi biri şle meşgulkeni bir araç kullanırken dinlemeyiniz.
+
+                            </p>
+                        </div>
+
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Bilinçaltı Uygulamaları'na nasıl ulaşırım?</a></h3>
+                            <p class="d-block py-2">
+                                Bilinçaltı Uygulamaları Bölümünden ihtiyacın olan ses kaydını alarak hemen dinlemeye başlayabilirsin.<br />
+                                "Hedeflerini Gerçekleştir" hediyemizdir. Diğer kayıtlar ile aynı kalitede hazırlanmıştır. Hemen dinlemeye başlayabilirsin.
+                            </p>
+                        </div>
+                        <div class="blog-details pb-2">
+                            <h3 class="blog-title py-2"><a href="#">Bilinçaltı Uygulamaları ücreti nedir?</a></h3>
+                            <p class="d-block py-2">
+                                Hedeflerini Gerçekleştir hediyemizdir. Diğer tüm ses kayıtları gerçek quantum seansı kalitesinde sadece <b>49.99 TL</b>'dir.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

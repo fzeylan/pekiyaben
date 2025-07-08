@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="098957bcd06d45ccad3a5f2b0f9d6952" Name="Diagram1">
+        <EntityTypeShape EntityType="PekiYaBenDBModel.Coach" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.AppUser" Width="1.5" PointX="2.625" PointY="0.75" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.Transaction" Width="1.5" PointX="4.5" PointY="3.25" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.Product" Width="1.5" PointX="6.375" PointY="3.625" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.ContentCategory" Width="1.5" PointX="8.25" PointY="0.75" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.Content" Width="1.5" PointX="8.25" PointY="2.75" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.Comment" Width="1.5" PointX="10" PointY="0.75" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.InvoiceInfo" Width="1.5" PointX="6.375" PointY="0.75" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.FAQ" Width="1.5" PointX="10" PointY="3.5" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.CoachCalendar" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.CoachCalendarUser" Width="1.5" PointX="4.5" PointY="0.75" />
+        <EntityTypeShape EntityType="PekiYaBenDBModel.GeneralParameter" Width="1.5" PointX="4.5" PointY="6.25" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

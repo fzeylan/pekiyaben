@@ -1,0 +1,426 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Coaching
+@using Emoda.PekiYaBen.Entity.Helpers
+
+@model CoachInfo
+
+@{
+    List<ProductInfo> products = (List<ProductInfo>)ViewBag.Products;
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/Scripts/DataTables/datatables.min.css">
+    <link href="~/Content/fullcalendar/main.css" rel="stylesheet" />
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            @using (Html.BeginForm("Edit", "Coach", FormMethod.Post, new { @onsubmit = "generateFields()" }))
+            {
+                @Html.HiddenFor(m => m.Id)
+                <div class="box-body">
+                    <h4 class="text-danger">Kişisel Bilgiler</h4>
+                    <div class="form-group col-sm-4">
+                        <label for="FullName">Ad Soyad</label>
+                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Title">Unvan</label>
+                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Title">E-posta</label>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Title">Doğum Tarihi</label>
+                        <div class='input-group date' id='dueDatePicker'>
+                            @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control" })
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Title">Telefon Numarası</label>
+                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Title">Profil Resmi</label>
+                        @Html.TextBoxFor(m => m.ProfilePhoto, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="Title">Açıklama</label>
+                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @rows = "4" })
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Title">Durum</label>
+                        @Html.EnumDropDownListFor(m => m.Status, new { @class = "form-control"})
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Title">Ana Sayfada Göster</label>
+                        @Html.CheckBoxFor(m => m.ShowMainPage)
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <h4 class="text-danger">Koçluk Bilgileri</h4>
+                        <div class="col-12">
+                            @Html.HiddenFor(m => m.CoachingInfo)
+                            <div id="coachingInfo">
+                                @foreach (var info in products)
+                                {
+                                    <div class="form-check col-sm-2">
+                                        <input class="form-check-input" type="checkbox" value="@info.Title" id="@info.Code" @(Model != null ? Model.CoachingInfo.Contains(info.Title) ? "checked" : "" : "" ) />
+                                        <label for="@info.Code">
+                                            @info.Title
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <h4 class="text-danger">Eğitim Bilgileri <button type="button" class="btn btn-sm" onclick="addEducation()"><i class="glyphicon-plus"></i> Eğitim Ekle</button></h4>
+
+                        @Html.HiddenFor(m => m.EducationInfo)
+                        <div id="educationInfo">
+                            @if (Model != null)
+                            {
+                                foreach (var info in Model.EducationList)
+                                {
+                                    <div class="row">
+                                        <div class="form-group col-sm-1">
+                                            <label>&nbsp;</label>
+                                            <button type="button" class="form-control btn btn-danger btn-sm" onclick="removeEducation(this)"><i class="glyphicon-minus"></i></button>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="Title">Dönem</label>
+                                            <input type="text" class="form-control form-control-sm" value="@info.Term" id="term" />
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label for="Title">Kurum</label>
+                                            <input type="text" class="form-control" value="@info.Organization" id="organization" />
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label for="Title">Adı</label>
+                                            <input type="text" class="form-control" value="@info.Name" id="name" />
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <h4 class="text-danger">Sertifika Bilgileri <button type="button" class="btn btn-sm" onclick="addCertificate()"><i class="glyphicon-plus"></i> Sertifika Ekle</button></h4>
+                        @Html.HiddenFor(m => m.CertificateInfo)
+                        <div id="certificateInfo">
+                            @if (Model != null)
+                            {
+                                foreach (var info in Model.CertificateList)
+                                {
+                                    <div class="row">
+                                        <div class="form-group col-sm-1">
+                                            <label>&nbsp;</label>
+                                            <button type="button" class="form-control btn btn-danger btn-sm" onclick="removeEducation(this)"><i class="glyphicon-minus"></i></button>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="Title">Dönem</label>
+                                            <input type="text" class="form-control form-control-sm" value="@info.Term" id="term" />
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label for="Title">Kurum</label>
+                                            <input type="text" class="form-control" value="@info.Organization" id="organization" />
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label for="Title">Adı</label>
+                                            <input type="text" class="form-control" value="@info.Name" id="name" />
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                <div class="box-footer text-right">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Kaydet</button>
+                </div>
+            }
+
+            @if (Model != null)
+            {
+                <div class="box-body">
+                    <h4 class="text-danger">Randevu Takvimi</h4>
+                    <div id='calendar'></div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Koçluk Tipi Seçiniz</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Randevu Tipi</label>
+                        <select id="interviewType" class="form-control">
+                            <option value="Genel">Genel</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Katılımcı Sayısı</label>
+                        <input type="number" min="1" max="30" class="form-control" id="participantLimit" value="1" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Dolu Randevu Ekle</label>
+                        <input type="checkbox" id="coachIsFull" />
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" onclick="ConfirmInterview()">Ekle</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+@section scripts{
+    <script type="text/javascript" src="/Scripts/bootstrap-datetimepicker.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Content/fullcalendar/main.js"></script>
+    <script src="~/Content/fullcalendar/locales-all.min.js"></script>
+    <script type="text/javascript">
+        var calendar;
+        var startDate, endDate;
+        $(document).ready(function () {
+            $('#dueDatePicker').datetimepicker({
+                format: 'DD.MM.YYYY'
+            });
+
+            @if (Model != null)
+            {
+            <text>
+            var calendarEl = document.getElementById('calendar');
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: ''
+                },
+                height: 'auto',
+                allDaySlot: false,
+                views: {
+                    timeGridSevenDay: {
+                        type: 'timeGrid',
+                        duration: { days: 7 },
+                        buttonText: '7 day'
+                    }
+                },
+                locale: 'tr',
+                initialView: 'timeGridSevenDay',
+                initialDate: new Date(),
+                navLinks: true, // can click day/week names to navigate views
+                selectable: true,
+                selectMirror: true,
+                slotDuration:'01:00:00',
+                select: function (arg) {
+                    startDate = arg.start;
+                    endDate = arg.end;
+
+                    $("#interviewType").html("");
+                    $("#interviewType").append(new Option("Genel", "Genel"));
+                    $("#coachingInfo input[type='checkbox']").each(function () {
+                        if ($(this).is(":checked"))
+                            $("#interviewType").append(new Option($(this).val(), $(this).val()));
+                    });
+
+                    $("#interviewType")
+                    $("#confirm").modal();
+
+                },
+
+                eventClick: function (arg) {
+                    if (arg.event.backgroundColor == "#19a5c9" || arg.event.backgroundColor == "#ff4d7e") {
+                        if (confirm('Görüşmeye uygunluk durumunu kaldırmak istediğinizden emin misiniz?')) {
+
+                            $.post("@Url.Action("RemoveCoachCalendar", "Coach")", {
+                                Id:arg.event.id
+                            }, function (result) {
+                                    if (result)
+                                        arg.event.remove();
+                                    else
+                                        alert('Silme işlemi sırasında hata oluştu, daha sorna tekra deneyiniz.');
+                            });
+                        }
+                    }
+                },
+                editable: true,
+                eventDidMount: function (ev) {
+                    $(ev.el).find(".fc-event-title").attr("title", ev.event.title);
+                },
+                dayMaxEvents: false, // allow "more" link when too many events
+                //events: [
+
+                //]
+            });
+
+            calendar.render();
+
+            getEvents();
+
+            </text>
+            }
+        });
+
+        function ConfirmInterview() {
+            $.post("@Url.Action("AddCoachCalendar", "Coach")", {
+                coachId:@(Model!= null ? Model.Id : 0),
+                interviewType: $("#interviewType").val(),
+                participantLimit: $("#participantLimit").val(),
+                availableDate: moment(startDate).format("YYYY-MM-DD HH:mm"),
+                coachIsFull: $("#coachIsFull")[0].checked
+            }, function (result) {
+                if (result != null) {
+
+                    var color = result.CoachIsFull == true ? '#ff4d7e' : '#19a5c9';
+
+                    calendar.addEvent({
+                        title: $("#interviewType").val() + " (" + $("#participantLimit").val() + " kişi)",
+                        start: startDate,
+                        end: endDate,
+                        allDay: false,
+                        editable: false,
+                        color: color
+                    });
+                    calendar.unselect();
+                    $("#confirm").modal("hide");
+                }
+                else {
+                    calendar.unselect();
+                    $("#confirm").modal("hide");
+                }
+            });
+        }
+
+        function getEvents() {
+             $.post("@Url.Action("GetCoachCalendar", "Coach")", {
+                Id:@(Model!= null ? Model.Id : 0),
+                startDate: moment(calendar.view.currentStart).format("YYYY-MM-DD HH:mm"),
+                endDate: moment(calendar.view.currentEnd).format("YYYY-MM-DD HH:mm")
+             }, function (result) {
+
+                     $('.fc-prev-button.fc-button').off("click").on("click", function () {
+                         getEvents();
+                     });
+
+                     $('.fc-next-button.fc-button').off("click").on("click", function () {
+                         getEvents();
+                     });
+
+                    calendar.removeAllEvents();
+                    calendar.addEventSource(result);
+            });
+        }
+
+        function generateFields() {
+            //generate educationInfo
+            var educationList = [];
+            var certificateList = [];
+            var coachingList = "";
+
+            $("#educationInfo .row").each(function () {
+                var term = $(this).find("#term").val();
+                var organization = $(this).find("#organization").val();
+                var name = $(this).find("#name").val();
+
+                if (term || organization || name) {
+                    var education = { "term": term, "organization": organization, "name": name }
+                    educationList.push(education);
+                }
+            });
+
+            $("#certificateInfo .row").each(function () {
+                var term = $(this).find("#term").val();
+                var organization = $(this).find("#organization").val();
+                var name = $(this).find("#name").val();
+
+                if (term || organization || name) {
+                    var certificate = { "term": term, "organization": organization, "name": name }
+                    certificateList.push(certificate);
+                }
+            });
+
+            $("#coachingInfo input[type='checkbox']").each(function () {
+                if ($(this).is(":checked"))
+                    coachingList += $(this).val() + ",";
+            });
+            $("#CoachingInfo").val(coachingList);
+            $("#EducationInfo").val(JSON.stringify(educationList));
+            $("#CertificateInfo").val(JSON.stringify(certificateList));
+        }
+
+        function addEducation() {
+            var content = "<div class='row'>";
+            content += "         <div class='form-group col-sm-1'>";
+            content += "             <label>&nbsp;</label>";
+            content += "             <button type='button' class='form-control btn btn-danger btn-sm' onclick='removeEducation(this)'><i class='glyphicon-minus'></i></button>";
+            content += "         </div>";
+            content += "         <div class='form-group col-sm-3'>";
+            content += "             <label for='Title'>Dönem</label>";
+            content += "             <input type='text' class='form-control form-control-sm' id='term'/>";
+            content += "         </div>";
+            content += "         <div class='form-group col-sm-4'>";
+            content += "             <label for='Title'>Kurum</label>";
+            content += "             <input type='text' class='form-control' id='organization'/>";
+            content += "         </div>";
+            content += "         <div class='form-group col-sm-4'>";
+            content += "             <label for='Title'>Adı</label>";
+            content += "             <input type='text' class='form-control' id='name'/>";
+            content += "         </div>";
+            content += "     </div>";
+
+            $("#educationInfo").append($(content));
+        }
+
+        function removeEducation(row) {
+            if (confirm("Eğitim bilgisi silinsin mi?")) {
+                $(row).parents(".row").first().remove();
+            }
+        }
+
+        function addCertificate() {
+            var content = "<div class='row'>";
+            content += "         <div class='form-group col-sm-1'>";
+            content += "             <label>&nbsp;</label>";
+            content += "             <button type='button' class='form-control btn btn-danger btn-sm' onclick='removeEducation(this)'><i class='glyphicon-minus'></i></button>";
+            content += "         </div>";
+            content += "         <div class='form-group col-sm-3'>";
+            content += "             <label for='Title'>Dönem</label>";
+            content += "             <input type='text' class='form-control form-control-sm' id='term'/>";
+            content += "         </div>";
+            content += "         <div class='form-group col-sm-4'>";
+            content += "             <label for='Title'>Kurum</label>";
+            content += "             <input type='text' class='form-control' id='organization'/>";
+            content += "         </div>";
+            content += "         <div class='form-group col-sm-4'>";
+            content += "             <label for='Title'>Adı</label>";
+            content += "             <input type='text' class='form-control' id='name'/>";
+            content += "         </div>";
+            content += "     </div>";
+
+            $("#certificateInfo").append($(content));
+        }
+    </script>
+}

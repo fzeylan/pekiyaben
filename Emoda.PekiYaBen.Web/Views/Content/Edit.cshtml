@@ -1,0 +1,321 @@
+﻿@using Emoda.PekiYaBen.Entity.Enums
+@using Emoda.PekiYaBen.Entity.Content
+@using Emoda.PekiYaBen.Entity.Helpers
+@using Emoda.PekiYaBen.Entity.Coaching
+@using Newtonsoft.Json
+
+@model ContentInfo
+@{
+    var categories = (List<SelectListItem>)ViewBag.Categories;
+var contentType = (General.ContentType)ViewBag.Type;
+var coaches = (List<SelectListItem>)ViewBag.Coaches;
+List<ProductInfo> products = (List<ProductInfo>)ViewBag.Products;
+}
+
+@section styles{
+
+    <link href="~/Content/summernote/summernote-lite.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.Jcrop.min.css" rel="stylesheet" />
+    <style>
+        #blah {
+            background-color: #FFF;
+            width: 825px;
+            height: 500px;
+            font-size: 24px;
+            display: block;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            @using (Html.BeginForm("Edit", "Content", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.Id)
+                <input type="hidden" name="Type" id="Type" value="@contentType.GetValue()" />
+                <div class="box-body">
+                    <div class="form-group col-sm-4">
+                        <label for="CategoryId">Kategori</label>
+                        @Html.DropDownListFor(m => m.CategoryId, new SelectList(categories, "Value", "Text"), "Kategori Seçiniz", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.CategoryId)
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Title">Başlığı</label>
+                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Title)
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="CategoryId">Yazar</label>
+                        @Html.DropDownListFor(m => m.CoachId, new SelectList(coaches, "Value", "Text"), "Yazar Seçiniz", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.CoachId)
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Image">Resim</label>
+                        <input type="hidden" id="Image" name="Image" />
+                        <span class="btn btn-primary col-sm-12 btn-file btn-sm">
+                            <span class="fileupload-new">Resim Seç</span>
+                            <input type="file" name="file" id="file" />
+                        </span>
+                    </div>
+                    <div class="form-group col-sm-8">
+                        <label for="Status">Durum</label>
+                        @Html.EnumDropDownListFor(m => m.Status, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Status)
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label for="Summary">Meta Description</label>
+                        @Html.TextBoxFor(m => m.MetaDescription, new { @class = "form-control", @maxlength = "155" })
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label for="Summary">Meta Keywords</label>
+                        @Html.TextBoxFor(m => m.MetaKeywords, new { @class = "form-control", @maxlength = "100" })
+                    </div>
+
+                    <div class="form-group col-sm-12">
+                        <label for="Summary">Özet</label>
+                        @Html.TextAreaFor(m => m.Summary, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="Description">Detay</label>
+                        @Html.TextAreaFor(m => m.Detail, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <h4 class="text-danger">Koçluk Bilgileri</h4>
+                        <div class="col-12">
+                            <div id="coachingInfo" style="height: 300px; overflow-y: auto; border: 1px solid #cccccc;">
+
+                                @{
+                                    List<int> selectedProducts = new List<int>();
+                                    
+                                    if (Model != null && !String.IsNullOrEmpty(Model.ProductIds))
+                                    {
+                                        selectedProducts = JsonConvert.DeserializeObject<List<int>>(Model.ProductIds);
+                                    }
+
+                                }
+
+                                @foreach (var info in products)
+                                {
+
+                                    Boolean isChecked = selectedProducts.Exists(x => x == info.Id);
+                                    <div class="form-check col-sm-6">
+                                        <input class="form-check-input" type="checkbox" value="@info.Id" id="@info.Code" name="selectedObjects" @(isChecked ? "checked" : "" ) />
+                                        <label for="@info.Code">
+                                            <h4>@info.Title</h4>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer text-right">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Kaydet</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="cropModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">İçerik Resmi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="preview" style="width:100% !important" />
+                <canvas id="canvas" height="5" width="5" style="display:none"></canvas>
+            </div>
+            <div class="modal-footer">
+                <input type="button" id="btnSave" value="Resmi Kırp" class="btn btn-warning btn-sm w-100" />
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Html.Partial("_ValidationScriptsPartial");
+    <script src="~/Content/summernote/summernote-lite.js"></script>
+    <script src="~/Content/summernote/lang/summernote-tr-TR.min.js"></script>
+    <script src="~/Scripts/jquery.Jcrop.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#Detail').summernote({
+                lang: 'tr-TR',
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'fontsize']],
+                    ['color', ['color', 'forecolor']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['height']],
+                    ['link', ['link']],
+                    ['picture', ['picture']],
+                    ['mybutton', ['myVideo'], ['picture']]
+                ],
+                buttons: {
+                    myVideo: function (context) {
+                        var ui = $.summernote.ui;
+                        var button = ui.button({
+                            contents: '<i class="fa fa-video-camera"/>',
+                            tooltip: 'video',
+                            click: function () {
+                                var div = document.createElement('div');
+                                div.classList.add('embed-container');
+                                var videoCode = prompt('Video/Podcast paylaşım kodunu giriniz');
+                                if (videoCode) {
+                                    var embed = $(videoCode)[0];
+                                    context.invoke('editor.insertNode', embed);
+                                }
+                            }
+                        });
+
+                        return button.render();
+                    }
+                },
+                height: 300
+            });
+
+
+            $('#Summary').summernote({
+                lang: 'tr-TR',
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'fontsize']],
+                    ['color', ['color', 'forecolor']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['height']],
+                    ['link', ['link']],
+                    ['picture', ['picture']],
+                    ['mybutton', ['myVideo'], ['picture']]
+                ],
+                buttons: {
+                    myVideo: function (context) {
+                        var ui = $.summernote.ui;
+                        var button = ui.button({
+                            contents: '<i class="fa fa-video-camera"/>',
+                            tooltip: 'video',
+                            click: function () {
+                                var div = document.createElement('div');
+                                div.classList.add('embed-container');
+                                var videoCode = prompt('Video/Podcast paylaşım kodunu giriniz');
+                                if (videoCode) {
+                                    var embed = $(videoCode)[0];
+                                    context.invoke('editor.insertNode', embed);
+                                }
+                            }
+                        });
+
+                        return button.render();
+                    }
+                },
+                height: 300,
+                callbacks: {
+                    onKeydown: function (e) {
+
+                        var t = e.currentTarget.innerText;
+                        if (t.trim().length >= 1000) {
+                            //delete keys, arrow keys, copy, cut, select all
+                            if (e.keyCode != 8 && !(e.keyCode >= 37 && e.keyCode <= 40) && e.keyCode != 46 && !(e.keyCode == 88 && e.ctrlKey) && !(e.keyCode == 67 && e.ctrlKey) && !(e.keyCode == 65 && e.ctrlKey))
+                                e.preventDefault();
+                        }
+                    },
+                    onKeyup: function (e) {
+                        var t = e.currentTarget.innerText;
+                        $('#maxContentPost').text(1000 - t.trim().length);
+                    },
+                    onPaste: function (e) {
+                        var t = e.currentTarget.innerText;
+                        var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                        e.preventDefault();
+                        var maxPaste = bufferText.length;
+                        if (t.length + bufferText.length > 1000) {
+                            maxPaste = 1000 - t.length;
+                        }
+                        if (maxPaste > 0) {
+                            document.execCommand('insertText', false, bufferText.substring(0, maxPaste));
+                        }
+                        $('#maxContentPost').text(1000 - t.length);
+                    }
+                }
+            });
+
+
+
+
+
+
+            $('#file').change(function () {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#preview').show();
+                    $('#cropModal').modal({ "backdrop": "static" });
+
+                    GetImageDimensions(e.target.result, function (data) {
+                        originalSize = data;
+                        $('#preview').attr("src", e.target.result);
+                        currentSize = {
+                            width: $('#preview').width(), height: $('#preview').height()
+                        };
+
+                        cropSize = {
+                            x: 0, y: 0, w: currentSize.width, h: currentSize.height
+                        };
+
+                        $('#preview').Jcrop({
+                            aspectRatio: 825 / 500,
+                            boxWidth: 825,
+                            boxHeight: 500,
+                            setSelect: [0, 0, cropSize.w, cropSize.h],
+                            onChange: SetCoordinates,
+                            onSelect: SetCoordinates,
+                        });
+                    })
+                };
+                reader.readAsDataURL($(this)[0].files[0]);
+            });
+
+            $('#btnSave').click(function () {
+                var x1 = cropSize.x;
+                var y1 = cropSize.y;
+                var width = cropSize.w;
+                var height = cropSize.h;
+                var canvas = $("#canvas")[0];
+                var context = canvas.getContext('2d');
+                var img = new Image();
+                var xRatio = originalSize.width / currentSize.width;
+                var yRatio = originalSize.height / currentSize.height;
+
+                img.onload = function () {
+                    canvas.height = height * yRatio;
+                    canvas.width = width * xRatio;
+                    context.drawImage(img, x1 * xRatio, y1 * yRatio, width * xRatio, height * yRatio, 0, 0, width * xRatio, height * yRatio);
+                    $("#Image").val(canvas.toDataURL());
+                    $('#cropModal').modal("hide");
+                    //$("#form-crop").submit();
+                };
+                img.src = $("#preview").attr("src");
+            });
+
+            function GetImageDimensions(path, callback) {
+                var img = new Image();
+                img.onload = function () {
+                    callback({
+                        width: img.width,
+                        height: img.height
+                    });
+                }
+                img.src = path;
+            }
+
+            function SetCoordinates(c) {
+                cropSize = c;
+            };
+        });
+
+    </script>
+}

@@ -1,0 +1,594 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B36B8DA3-5D31-48D1-BA0A-AECA93DE6A30}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PekiYaBen.WebSite</RootNamespace>
+    <AssemblyName>PekiYaBen.WebSite</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44342</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageProcessor, Version=2.8.0.152, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ImageProcessor.2.8.0\lib\net452\ImageProcessor.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageProcessor.Plugins.WebP, Version=1.3.0.152, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ImageProcessor.Plugins.WebP.1.3.0\lib\net452\ImageProcessor.Plugins.WebP.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.6.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.6.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Http, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Http.6.0.0\lib\net461\Microsoft.Extensions.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.6.0.0\lib\net461\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\lib\net461\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Options.6.0.0\lib\net461\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.6.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.4.7.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.4.7.2\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Enums\General.cs" />
+    <Compile Include="Extensions\UrlExtension.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\AuthenticationHelper.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Helpers\ConditionalAttribute.cs" />
+    <Compile Include="Helpers\GeneralHelpers.cs" />
+    <Compile Include="Helpers\HashHelper.cs" />
+    <Compile Include="Helpers\MailHelper.cs" />
+    <Compile Include="Models\EntityModels\AppUser.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\Coach.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\CoachCalendar.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\CoachCalendarUser.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\Comment.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\Content.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\ContentCategory.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\Entities.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entities.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\Entities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\Entities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\FAQ.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\GeneralParameter.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\InvoiceInfo.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\Product.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityModels\Transaction.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FormData.cs" />
+    <Compile Include="Models\HepsiBurada\OrderItem.cs" />
+    <Compile Include="Models\MethodResult.cs" />
+    <Compile Include="Models\TokenResponse.cs" />
+    <Compile Include="Models\ViewModels\ContentLite.cs" />
+    <Compile Include="Models\ViewModels\LoginViewModel.cs" />
+    <Compile Include="Models\ViewModels\RegisterViewModel.cs" />
+    <Compile Include="Models\ViewModels\RemindPasswordViewModel.cs" />
+    <Compile Include="Models\ViewModels\InvoiceUpdateViewModel.cs" />
+    <Compile Include="Models\ViewModels\UserUpdateViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\assets\css\all.min.css" />
+    <Content Include="Content\assets\css\animate.min.css" />
+    <Content Include="Content\assets\css\aos.css" />
+    <Content Include="Content\assets\css\bootstrap.min.css" />
+    <Content Include="Content\assets\css\jquery.fancybox.min.css" />
+    <Content Include="Content\assets\css\owl.carousel.min.css" />
+    <Content Include="Content\assets\css\responsive.css" />
+    <Content Include="Content\assets\css\slickv1.css" />
+    <Content Include="Content\assets\css\style.css" />
+    <Content Include="Content\assets\font\flaticon.css" />
+    <Content Include="Content\assets\img\avatar\avatar-1.png" />
+    <Content Include="Content\assets\img\avatar\avatar-2.png" />
+    <Content Include="Content\assets\img\avatar\avatar-3.png" />
+    <Content Include="Content\assets\img\avatar\avatar-4.png" />
+    <Content Include="Content\assets\img\bg\accounts.jpg" />
+    <Content Include="Content\assets\img\bg\download-bg.jpg" />
+    <Content Include="Content\assets\img\bg\download.jpg" />
+    <Content Include="Content\assets\img\bg\inner-bg.jpg" />
+    <Content Include="Content\assets\img\bg\map.png" />
+    <Content Include="Content\assets\img\bg\pattern-bg.png" />
+    <Content Include="Content\assets\img\bg\welcome-bg.jpg" />
+    <Content Include="Content\assets\img\blog\blog-1.jpg" />
+    <Content Include="Content\assets\img\blog\blog-2.jpg" />
+    <Content Include="Content\assets\img\blog\blog-3.jpg" />
+    <Content Include="Content\assets\img\blog\blog-4.jpg" />
+    <Content Include="Content\assets\img\blog\blog-5.jpg" />
+    <Content Include="Content\assets\img\blog\blog-6.jpg" />
+    <Content Include="Content\assets\img\blog\blog-7.jpg" />
+    <Content Include="Content\assets\img\blog\blog-8.jpg" />
+    <Content Include="Content\assets\img\blog\blog-9.jpg" />
+    <Content Include="Content\assets\img\brand\1.png" />
+    <Content Include="Content\assets\img\brand\2.png" />
+    <Content Include="Content\assets\img\brand\3.png" />
+    <Content Include="Content\assets\img\brand\4.png" />
+    <Content Include="Content\assets\img\brand\5.png" />
+    <Content Include="Content\assets\img\brand\6.png" />
+    <Content Include="Content\assets\img\categories\catisma-yonetimi.jpg" />
+    <Content Include="Content\assets\img\categories\enerji-tibbi.jpg" />
+    <Content Include="Content\assets\img\categories\etkili-iletisim-ve-liderlik.jpg" />
+    <Content Include="Content\assets\img\categories\etkili-takim.jpg" />
+    <Content Include="Content\assets\img\categories\girisimci-kocu.jpg" />
+    <Content Include="Content\assets\img\categories\h2q-butunsel-ozfarkindalik.jpg" />
+    <Content Include="Content\assets\img\categories\iliski-kocu.jpg" />
+    <Content Include="Content\assets\img\categories\kahkaha-koclugu.jpg" />
+    <Content Include="Content\assets\img\categories\kariyer-kocu.jpg" />
+    <Content Include="Content\assets\img\categories\kendi-hayatinin-kocu-ol.jpg" />
+    <Content Include="Content\assets\img\categories\kisisel--swot-analizi.jpg" />
+    <Content Include="Content\assets\img\categories\kocvari-ogretmenlik.jpg" />
+    <Content Include="Content\assets\img\categories\kurumsal-kocluk.jpg" />
+    <Content Include="Content\assets\img\categories\mindfullness.jpg" />
+    <Content Include="Content\assets\img\categories\mutluluk-koclugu.jpg" />
+    <Content Include="Content\assets\img\categories\nefesle-hayat.jpg" />
+    <Content Include="Content\assets\img\categories\ogrenci-kocu.jpg" />
+    <Content Include="Content\assets\img\categories\quantum-kocu.jpg" />
+    <Content Include="Content\assets\img\categories\sabotajcimiza-ozsefkat.jpg" />
+    <Content Include="Content\assets\img\categories\stresle-basetme.jpg" />
+    <Content Include="Content\assets\img\categories\sunum-teknikleri.jpg" />
+    <Content Include="Content\assets\img\categories\takim-kocu.jpg" />
+    <Content Include="Content\assets\img\categories\vuca.jpg" />
+    <Content Include="Content\assets\img\categories\yaratim.jpg" />
+    <Content Include="Content\assets\img\categories\yasam-kocu.jpg" />
+    <Content Include="Content\assets\img\categories\yazar-kocu.jpg" />
+    <Content Include="Content\assets\img\categories\yonetici-kocu.jpg" />
+    <Content Include="Content\assets\img\categories\zamanini-kim-yonetiyor.jpg" />
+    <Content Include="Content\assets\img\discover\iphone_x.png" />
+    <Content Include="Content\assets\img\discover\thumb-2.png" />
+    <Content Include="Content\assets\img\discover\thumb-3.png" />
+    <Content Include="Content\assets\img\favicon.png" />
+    <Content Include="Content\assets\img\features\KDA.png" />
+    <Content Include="Content\assets\img\features\thumb-1.png" />
+    <Content Include="Content\assets\img\features\_thumb-1.png" />
+    <Content Include="Content\assets\img\icon\app-store-black.png" />
+    <Content Include="Content\assets\img\icon\app-store-white.png" />
+    <Content Include="Content\assets\img\icon\app-store.png" />
+    <Content Include="Content\assets\img\icon\BilincaltiUygulamalari.png" />
+    <Content Include="Content\assets\img\icon\featured-img\code.png" />
+    <Content Include="Content\assets\img\icon\featured-img\lock.png" />
+    <Content Include="Content\assets\img\icon\featured-img\seo-and-web.png" />
+    <Content Include="Content\assets\img\icon\featured-img\speak.png" />
+    <Content Include="Content\assets\img\icon\featured-img\support.png" />
+    <Content Include="Content\assets\img\icon\google-play-black.png" />
+    <Content Include="Content\assets\img\icon\google-play-white.png" />
+    <Content Include="Content\assets\img\icon\google-play.png" />
+    <Content Include="Content\assets\img\icon\KisiselDurumAnalizi.png" />
+    <Content Include="Content\assets\img\icon\KisiselGelisimAtolyesi.png" />
+    <Content Include="Content\assets\img\icon\KisiselStratejiBelirleme.png" />
+    <Content Include="Content\assets\img\icon\KoclukGorusmeleri.png" />
+    <Content Include="Content\assets\img\icon\work\app.png" />
+    <Content Include="Content\assets\img\icon\work\download.png" />
+    <Content Include="Content\assets\img\icon\work\settings.png" />
+    <Content Include="Content\assets\img\icon\_app-store.png" />
+    <Content Include="Content\assets\img\icon\_google-play.png" />
+    <Content Include="Content\assets\img\logo\logo-white.png" />
+    <Content Include="Content\assets\img\logo\logo.png" />
+    <Content Include="Content\assets\img\logo\_logo.png" />
+    <Content Include="Content\assets\img\mobile-slider.png" />
+    <Content Include="Content\assets\img\preview\01.png" />
+    <Content Include="Content\assets\img\preview\02.png" />
+    <Content Include="Content\assets\img\preview\03.png" />
+    <Content Include="Content\assets\img\preview\04.png" />
+    <Content Include="Content\assets\img\preview\05.png" />
+    <Content Include="Content\assets\img\preview\06.png" />
+    <Content Include="Content\assets\img\preview\404.png" />
+    <Content Include="Content\assets\img\preview\blog-01.png" />
+    <Content Include="Content\assets\img\preview\blog-02.png" />
+    <Content Include="Content\assets\img\preview\blog-03.png" />
+    <Content Include="Content\assets\img\preview\blog-04.png" />
+    <Content Include="Content\assets\img\preview\blog-05.png" />
+    <Content Include="Content\assets\img\preview\blog-06.png" />
+    <Content Include="Content\assets\img\preview\coming-soon.png" />
+    <Content Include="Content\assets\img\preview\contact.png" />
+    <Content Include="Content\assets\img\preview\download.png" />
+    <Content Include="Content\assets\img\preview\faq.png" />
+    <Content Include="Content\assets\img\preview\forgot.png" />
+    <Content Include="Content\assets\img\preview\login.png" />
+    <Content Include="Content\assets\img\preview\newsletter.png" />
+    <Content Include="Content\assets\img\preview\preview-mockup.png" />
+    <Content Include="Content\assets\img\preview\pricing.png" />
+    <Content Include="Content\assets\img\preview\reviews.png" />
+    <Content Include="Content\assets\img\preview\signup.png" />
+    <Content Include="Content\assets\img\preview\thank-you.png" />
+    <Content Include="Content\assets\img\pricing\basic.png" />
+    <Content Include="Content\assets\img\pricing\premium.png" />
+    <Content Include="Content\assets\img\profile.jpg" />
+    <Content Include="Content\assets\img\screenshots\1.jpg" />
+    <Content Include="Content\assets\img\screenshots\2.jpg" />
+    <Content Include="Content\assets\img\screenshots\3.jpg" />
+    <Content Include="Content\assets\img\screenshots\4.jpg" />
+    <Content Include="Content\assets\img\screenshots\5.jpg" />
+    <Content Include="Content\assets\img\screenshots\AnaEkran.png" />
+    <Content Include="Content\assets\img\screenshots\BilincaltiUygulamalari-2.png" />
+    <Content Include="Content\assets\img\screenshots\BilincaltiUygulamalari.png" />
+    <Content Include="Content\assets\img\screenshots\KisiselDurumAnalizi.png" />
+    <Content Include="Content\assets\img\screenshots\KisiselStratejiBelirleme.png" />
+    <Content Include="Content\assets\img\screenshots\KoclukGorusmesi-1.png" />
+    <Content Include="Content\assets\img\screenshots\KoclukGorusmesi-2.png" />
+    <Content Include="Content\assets\img\screenshots\KoclukGorusmesi-3.png" />
+    <Content Include="Content\assets\img\screenshots\KoclukGorusmesi-4.png" />
+    <Content Include="Content\assets\img\services\thumb-1.png" />
+    <Content Include="Content\assets\img\services\thumb-2.png" />
+    <Content Include="Content\assets\img\welcome\welcome-mockup-2.png" />
+    <Content Include="Content\assets\img\welcome\welcome-mockup.png" />
+    <Content Include="Content\assets\js\active.js" />
+    <Content Include="Content\assets\js\bootstrap\bootstrap.min.js" />
+    <Content Include="Content\assets\js\bootstrap\popper.min.js" />
+    <Content Include="Content\assets\js\jcrop\css\Jcrop.gif" />
+    <Content Include="Content\assets\js\jcrop\css\jquery.Jcrop.css" />
+    <Content Include="Content\assets\js\jcrop\css\jquery.Jcrop.min.css" />
+    <Content Include="Content\assets\js\jcrop\js\jquery.color.js" />
+    <Content Include="Content\assets\js\jcrop\js\jquery.Jcrop.js" />
+    <Content Include="Content\assets\js\jcrop\js\jquery.Jcrop.min.js" />
+    <Content Include="Content\assets\js\jcrop\js\jquery.min.js" />
+    <Content Include="Content\assets\js\jquery\jquery-3.3.1.min.js" />
+    <Content Include="Content\assets\js\jquery\jquery-ui.min.js" />
+    <Content Include="Content\assets\js\jquery\jquery.ui.css" />
+    <Content Include="Content\assets\js\jquery\jquery.validate.js" />
+    <Content Include="Content\assets\js\jquery\jquery.validate.min.js" />
+    <Content Include="Content\assets\js\jquery\jquery.validate.unobtrusive.js" />
+    <Content Include="Content\assets\js\jquery\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Content\assets\js\plugins\bootbox\bootbox.js" />
+    <Content Include="Content\assets\js\plugins\bootstrap-datepicker\css\bootstrap-datepicker.css" />
+    <Content Include="Content\assets\js\plugins\bootstrap-datepicker\js\bootstrap-datepicker.js" />
+    <Content Include="Content\assets\js\plugins\bootstrap-datepicker\js\bootstrap-dateppicker.tr.js" />
+    <Content Include="Content\assets\js\plugins\fullcalendar\locales-all.js" />
+    <Content Include="Content\assets\js\plugins\fullcalendar\locales-all.min.js" />
+    <Content Include="Content\assets\js\plugins\fullcalendar\main.css" />
+    <Content Include="Content\assets\js\plugins\fullcalendar\main.js" />
+    <Content Include="Content\assets\js\plugins\moment\moment.js" />
+    <Content Include="Content\assets\js\plugins\moment\moment.min.js" />
+    <Content Include="Content\assets\js\plugins\plugins.min.js" />
+    <Content Include="doc\KullaniciSozlesmesi.html" />
+    <Content Include="doc\AcikRizaMetni.html" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Models\EntityModels\Entities.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Entities.Context.cs</LastGenOutput>
+      <DependentUpon>Entities.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\EntityModels\Entities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Entities.edmx</DependentUpon>
+      <LastGenOutput>Entities.cs</LastGenOutput>
+    </Content>
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\assets\font\Flaticon.eot" />
+    <Content Include="Content\assets\font\Flaticon.ttf" />
+    <Content Include="Content\assets\font\Flaticon.woff" />
+    <Content Include="Content\assets\font\Flaticon.woff2" />
+    <Content Include="Content\assets\img\features\thumb-1.psd" />
+    <Content Include="Content\assets\webfonts\fa-brands-400.woff" />
+    <Content Include="Content\assets\webfonts\fa-brands-400.woff2" />
+    <Content Include="Content\assets\webfonts\fa-regular-400.woff" />
+    <Content Include="Content\assets\webfonts\fa-regular-400.woff2" />
+    <Content Include="Content\assets\webfonts\fa-solid-900.woff" />
+    <Content Include="Content\assets\webfonts\fa-solid-900.woff2" />
+    <EntityDeploy Include="Models\EntityModels\Entities.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Entities.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\EntityModels\Entities.edmx.diagram">
+      <DependentUpon>Entities.edmx</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Templates\email.html" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Coaches.cshtml" />
+    <Content Include="Views\Home\Coach.cshtml" />
+    <Content Include="Views\Home\KDA.cshtml" />
+    <Content Include="Views\Home\KSB.cshtml" />
+    <Content Include="Views\Home\BU.cshtml" />
+    <Content Include="Views\Home\KG.cshtml" />
+    <Content Include="Views\Home\FAQ.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <Content Include="Views\Account\_Coaches.cshtml" />
+    <Content Include="Views\Account\MyProducts.cshtml" />
+    <Content Include="Views\Account\MyInterviews.cshtml" />
+    <Content Include="Views\Account\NewInterview.cshtml" />
+    <Content Include="Views\Account\EditProfile.cshtml" />
+    <Content Include="Views\Home\Product.cshtml" />
+    <Content Include="Views\Account\InterviewCalendar.cshtml" />
+    <Content Include="Views\Account\Payment.cshtml" />
+    <Content Include="Views\Account\PaymentNotification.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\RemindPassword.cshtml" />
+    <Content Include="Views\Account\EditMeeting.cshtml" />
+    <Content Include="Views\Account\CancelMeeting.cshtml" />
+    <Content Include="Views\Account\PaymentSucceeded.cshtml" />
+    <Content Include="Views\Account\PaymentFailed.cshtml" />
+    <Content Include="Views\Home\Blog.cshtml" />
+    <Content Include="Views\Home\BlogDetail.cshtml" />
+    <Content Include="Views\Home\Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\assets\js\jquery\images\" />
+    <Folder Include="Content\assets\js\slick\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>63067</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:63067/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets'))" />
+  </Target>
+  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
+    <ItemGroup>
+      <RoslynFiles Include="$(CscToolPath)\*" />
+    </ItemGroup>
+    <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
+  </Target>
+  <Import Project="..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets" Condition="Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Hata Oluştu!";
+    var message = (string)ViewBag.Message;
+}
+<div class="contact-page blog">
+    <section class="section breadcrumb-area bg-overlay d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Breamcrumb Content -->
+                    <div class="breadcrumb-content d-flex flex-column align-items-center text-center pt-5">
+                        <h2 class="text-white">@ViewBag.Title</h2>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                            <li class="breadcrumb-item active">@ViewBag.Title</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact" class="contact-area bg-gray ptb_100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <div class="section-heading">
+                        <h2>@ViewBag.Title</h2>
+                        <p class="d-none d-sm-block mt-4">
+                            İşlem sırasında hata oluştu. <br />
+                            @*Bir önceki sayafaya dönmek için <a href="javacript:window.history.go(-1);" class="text-danger">tıklayınız</a>*@
+                            @*<b>Exception:</b> @Model.Exception.Message<br />
+                            <b>Controller:</b> @Model.ControllerName<br />
+                            <b>Action:</b> @Model.ActionName*@
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
