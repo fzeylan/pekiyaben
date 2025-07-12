@@ -13,6 +13,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PekiYaBen.API", "PekiYaBen.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PekiYaBen.WebSite", "PekiYaBen.WebSite\PekiYaBen.WebSite.csproj", "{B36B8DA3-5D31-48D1-BA0A-AECA93DE6A30}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PekiYaBen.NewWebSite", "PekiYaBen.NewWebSite\", "{2A7768B9-4E91-4EF2-AAEB-1DD5CEB5C91A}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_52534"
+		Debug.AspNetCompiler.PhysicalPath = "PekiYaBen.NewWebSite\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52534\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_52534"
+		Release.AspNetCompiler.PhysicalPath = "PekiYaBen.NewWebSite\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52534\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "52534"
+		SlnRelativePath = "PekiYaBen.NewWebSite\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +60,10 @@ Global
 		{B36B8DA3-5D31-48D1-BA0A-AECA93DE6A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B36B8DA3-5D31-48D1-BA0A-AECA93DE6A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B36B8DA3-5D31-48D1-BA0A-AECA93DE6A30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A7768B9-4E91-4EF2-AAEB-1DD5CEB5C91A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A7768B9-4E91-4EF2-AAEB-1DD5CEB5C91A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A7768B9-4E91-4EF2-AAEB-1DD5CEB5C91A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A7768B9-4E91-4EF2-AAEB-1DD5CEB5C91A}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
