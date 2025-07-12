@@ -13,10 +13,9 @@ export default defineConfig({
         port: 7000,
         proxy: {
             '/api': {
-                target: 'http://localhost:63067', // Your .NET backend URL
+                target: 'http://localhost:63067/webapi', // Your .NET backend URL
                 changeOrigin: true,
                 secure: false,
-                rewrite: (path) => path.replace(/^\/api/, '')
             }
         }
     },

@@ -63,4 +63,4 @@ const CoachesService = {
     },
 }
 
-export default new CoachesService()
+export default CoachesService

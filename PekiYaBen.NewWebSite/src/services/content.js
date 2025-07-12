@@ -57,7 +57,7 @@ const ContentService = {
 
     // Coaches
     async getCoaches() {
-        const response = await api.get('/Home/Coaches')
+        const response = await api.get('/webapi/coaches')
         return response.data
     },
 

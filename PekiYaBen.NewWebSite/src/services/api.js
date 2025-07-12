@@ -116,7 +116,24 @@ api.interceptors.response.use(
     }
 )
 
-// Helper methods
+// Helper function to handle errors
+const handleError = (error) => {
+    if (error.response?.data) {
+        return {
+            message: error.response.data.message || 'An error occurred',
+            errors: error.response.data.errors || {},
+            status: error.response.status
+        }
+    }
+
+    return {
+        message: error.message || 'Network error occurred',
+        errors: {},
+        status: 0
+    }
+}
+
+// Helper methods for auth token management
 api.setAuthToken = (token) => {
     if (token) {
         api.defaults.headers.Authorization = `Bearer ${token}`
@@ -129,71 +146,64 @@ api.clearAuthToken = () => {
     delete api.defaults.headers.Authorization
 }
 
-// Request methods with error handling
-const apiMethods = {
+// Enhanced API methods that wrap the original axios methods
+const apiService = {
+    // GET request with error handling
     async get(url, config = {}) {
         try {
             const response = await api.get(url, config)
             return { data: response.data, status: response.status }
         } catch (error) {
-            throw this.handleError(error)
+            throw handleError(error)
         }
     },
 
+    // POST request with error handling
     async post(url, data = {}, config = {}) {
         try {
             const response = await api.post(url, data, config)
             return { data: response.data, status: response.status }
         } catch (error) {
-            throw this.handleError(error)
+            throw handleError(error)
         }
     },
 
+    // PUT request with error handling
     async put(url, data = {}, config = {}) {
         try {
             const response = await api.put(url, data, config)
             return { data: response.data, status: response.status }
         } catch (error) {
-            throw this.handleError(error)
+            throw handleError(error)
         }
     },
 
+    // PATCH request with error handling
     async patch(url, data = {}, config = {}) {
         try {
             const response = await api.patch(url, data, config)
             return { data: response.data, status: response.status }
         } catch (error) {
-            throw this.handleError(error)
+            throw handleError(error)
         }
     },
 
+    // DELETE request with error handling
     async delete(url, config = {}) {
         try {
             const response = await api.delete(url, config)
             return { data: response.data, status: response.status }
         } catch (error) {
-            throw this.handleError(error)
+            throw handleError(error)
         }
     },
 
-    handleError(error) {
-        if (error.response?.data) {
-            return {
-                message: error.response.data.message || 'An error occurred',
-                errors: error.response.data.errors || {},
-                status: error.response.status
-            }
-        }
+    // Utility methods
+    setAuthToken: api.setAuthToken,
+    clearAuthToken: api.clearAuthToken,
 
-        return {
-            message: error.message || 'Network error occurred',
-            errors: {},
-            status: 0
-        }
-    }
+    // Access to the raw axios instance if needed
+    raw: api
 }
 
-// Extend api with custom methods
-Object.assign(api, apiMethods)
-
-export default api
+export default apiService
