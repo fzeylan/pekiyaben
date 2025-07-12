@@ -1,204 +1,337 @@
+// src/stores/auth.js
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
-import apiClient from '@/services/api'
+import api from '@/services/api'
+import router from '@/router'
 
 export const useAuthStore = defineStore('auth', () => {
-  const router = useRouter()
-  const toast = useToast()
-  
-  // State
-  const user = ref(null)
-  const token = ref(null)
-  const isLoading = ref(false)
-  
-  // Getters
-  const isAuthenticated = computed(() => !!token.value && !!user.value)
-  const userFullName = computed(() => user.value?.fullName || '')
-  const userEmail = computed(() => user.value?.email || '')
-  
-  // Actions
-  const initializeAuth = () => {
-    const savedToken = localStorage.getItem('auth_token')
-    const savedUser = localStorage.getItem('auth_user')
-    
-    if (savedToken && savedUser) {
-      try {
-        token.value = savedToken
-        user.value = JSON.parse(savedUser)
-        apiClient.setAuthToken(savedToken)
-      } catch (error) {
-        console.error('Error parsing saved user data:', error)
-        logout()
-      }
-    }
-  }
-  
-  const login = async (credentials) => {
-    isLoading.value = true
-    try {
-      const response = await apiClient.post('/Account/LoginMod', {
-        email: credentials.email,
-        pass: credentials.password
-      })
-      
-      if (response.data.Succeed) {
-        // Since your backend doesn't return JWT tokens, we'll create a simple auth token
-        const authToken = btoa(`${credentials.email}:${Date.now()}`)
-        
-        // Get user details after successful login
-        const userResponse = await apiClient.get('/Account/GetCurrentUser')
-        
-        token.value = authToken
-        user.value = userResponse.data
-        
-        // Store in localStorage
-        localStorage.setItem('auth_token', authToken)
-        localStorage.setItem('auth_user', JSON.stringify(userResponse.data))
-        
-        apiClient.setAuthToken(authToken)
-        
-        toast.success('Başarıyla giriş yaptınız!')
-        
-        return { success: true }
-      } else {
-        toast.error(response.data.Message || 'Giriş başarısız!')
-        return { success: false, message: response.data.Message }
-      }
-    } catch (error) {
-      const message = error.response?.data?.Message || 'Giriş sırasında bir hata oluştu'
-      toast.error(message)
-      return { success: false, message }
-    } finally {
-      isLoading.value = false
-    }
-  }
-  
-  const register = async (userData) => {
-    isLoading.value = true
-    try {
-      const response = await apiClient.post('/Account/SignMod', {
-        fullName: userData.fullName,
-        email: userData.email,
-        pass: userData.password,
-        newPass: userData.confirmPassword,
-        agreement: userData.agreement
-      })
-      
-      if (response.data.Succeed) {
-        toast.success('Kayıt işlemi başarılı! Giriş yapabilirsiniz.')
-        return { success: true }
-      } else {
-        toast.error(response.data.Message || 'Kayıt başarısız!')
-        return { success: false, message: response.data.Message }
-      }
-    } catch (error) {
-      const message = error.response?.data?.Message || 'Kayıt sırasında bir hata oluştu'
-      toast.error(message)
-      return { success: false, message }
-    } finally {
-      isLoading.value = false
-    }
-  }
-  
-  const forgotPassword = async (email) => {
-    isLoading.value = true
-    try {
-      const response = await apiClient.post('/Account/RemindPassword', { email })
-      
-      if (response.data.Succeed) {
-        toast.success('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.')
-        return { success: true }
-      } else {
-        toast.error(response.data.Message || 'İşlem başarısız!')
-        return { success: false, message: response.data.Message }
-      }
-    } catch (error) {
-      const message = error.response?.data?.Message || 'İşlem sırasında bir hata oluştu'
-      toast.error(message)
-      return { success: false, message }
-    } finally {
-      isLoading.value = false
-    }
-  }
-  
-  const updateProfile = async (profileData) => {
-    isLoading.value = true
-    try {
-      const response = await apiClient.post('/Account/EditProfile', profileData)
-      
-      if (response.data.Succeed) {
-        // Update user data in store
-        user.value = { ...user.value, ...profileData }
-        localStorage.setItem('auth_user', JSON.stringify(user.value))
-        
-        toast.success('Profil başarıyla güncellendi!')
-        return { success: true }
-      } else {
-        toast.error(response.data.Message || 'Güncelleme başarısız!')
-        return { success: false, message: response.data.Message }
-      }
-    } catch (error) {
-      const message = error.response?.data?.Message || 'Güncelleme sırasında bir hata oluştu'
-      toast.error(message)
-      return { success: false, message }
-    } finally {
-      isLoading.value = false
-    }
-  }
-  
-  const logout = () => {
-    user.value = null
-    token.value = null
-    
-    localStorage.removeItem('auth_token')
-    localStorage.removeItem('auth_user')
-    
-    apiClient.setAuthToken(null)
-    
-    toast.info('Başarıyla çıkış yaptınız.')
-    
-    if (router.currentRoute.value.meta.requiresAuth) {
-      router.push({ name: 'Home' })
-    }
-  }
-  
-  const getCurrentUser = async () => {
-    if (!isAuthenticated.value) return null
-    
-    try {
-      const response = await apiClient.get('/Account/GetCurrentUser')
-      user.value = response.data
-      localStorage.setItem('auth_user', JSON.stringify(response.data))
-      return response.data
-    } catch (error) {
-      console.error('Error fetching current user:', error)
-      if (error.response?.status === 401) {
-        logout()
-      }
-      return null
-    }
-  }
-  
-  return {
     // State
-    user: readonly(user),
-    token: readonly(token),
-    isLoading: readonly(isLoading),
-    
+    const user = ref(null)
+    const token = ref(localStorage.getItem('auth_token'))
+    const isLoading = ref(false)
+    const loginAttempts = ref(0)
+    const lastLoginAttempt = ref(null)
+
     // Getters
-    isAuthenticated,
-    userFullName,
-    userEmail,
-    
+    const isAuthenticated = computed(() => !!token.value && !!user.value)
+    const userRole = computed(() => user.value?.role || 'user')
+    const userFullName = computed(() => {
+        if (!user.value) return ''
+        return `${user.value.firstName || ''} ${user.value.lastName || ''}`.trim()
+    })
+    const userInitials = computed(() => {
+        if (!user.value) return ''
+        const firstName = user.value.firstName || ''
+        const lastName = user.value.lastName || ''
+        return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+    })
+
     // Actions
-    initializeAuth,
-    login,
-    register,
-    forgotPassword,
-    updateProfile,
-    logout,
-    getCurrentUser
-  }
+    const setToken = (newToken) => {
+        token.value = newToken
+        if (newToken) {
+            localStorage.setItem('auth_token', newToken)
+            api.setAuthToken(newToken)
+        } else {
+            localStorage.removeItem('auth_token')
+            api.clearAuthToken()
+        }
+    }
+
+    const setUser = (userData) => {
+        user.value = userData
+    }
+
+    const updateUser = (userData) => {
+        if (user.value) {
+            user.value = { ...user.value, ...userData }
+        }
+    }
+
+    const login = async (credentials) => {
+        try {
+            isLoading.value = true
+
+            // Check rate limiting
+            const now = Date.now()
+            if (lastLoginAttempt.value && (now - lastLoginAttempt.value < 60000) && loginAttempts.value >= 5) {
+                throw new Error('Too many login attempts. Please try again in a minute.')
+            }
+
+            const response = await api.post('/Account/Login', credentials)
+
+            if (response.data.success) {
+                const { token: authToken, user: userData } = response.data
+
+                setToken(authToken)
+                setUser(userData)
+
+                // Reset login attempts on successful login
+                loginAttempts.value = 0
+                lastLoginAttempt.value = null
+
+                return response.data
+            } else {
+                throw new Error(response.data.message || 'Login failed')
+            }
+        } catch (error) {
+            // Track failed login attempts
+            loginAttempts.value++
+            lastLoginAttempt.value = Date.now()
+
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const register = async (userData) => {
+        try {
+            isLoading.value = true
+            const response = await api.post('/Account/Register', userData)
+
+            if (response.data.success) {
+                // Some implementations auto-login after registration
+                if (response.data.token) {
+                    const { token: authToken, user: newUser } = response.data
+                    setToken(authToken)
+                    setUser(newUser)
+                }
+
+                return response.data
+            } else {
+                throw new Error(response.data.message || 'Registration failed')
+            }
+        } catch (error) {
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const logout = async (redirectToLogin = false) => {
+        try {
+            // Call logout endpoint if user is authenticated
+            if (token.value) {
+                await api.post('/Account/Logout').catch(() => {
+                    // Ignore errors on logout endpoint
+                })
+            }
+        } finally {
+            // Clear local state regardless of API call result
+            setToken(null)
+            setUser(null)
+            loginAttempts.value = 0
+            lastLoginAttempt.value = null
+
+            if (redirectToLogin) {
+                router.push({ name: 'Login' })
+            }
+        }
+    }
+
+    const fetchUser = async () => {
+        if (!token.value) return null
+
+        try {
+            isLoading.value = true
+            const response = await api.get('/Account/Profile')
+
+            if (response.data) {
+                setUser(response.data)
+                return response.data
+            } else {
+                // Token might be invalid
+                await logout()
+                return null
+            }
+        } catch (error) {
+            // Token is likely invalid
+            await logout()
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const forgotPassword = async (email) => {
+        try {
+            isLoading.value = true
+            const response = await api.post('/Account/ForgotPassword', { email })
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const resetPassword = async (resetData) => {
+        try {
+            isLoading.value = true
+            const response = await api.post('/Account/ResetPassword', resetData)
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const changePassword = async (passwordData) => {
+        try {
+            isLoading.value = true
+            const response = await api.put('/Account/ChangePassword', passwordData)
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const verifyEmail = async (token) => {
+        try {
+            isLoading.value = true
+            const response = await api.post('/Account/VerifyEmail', { token })
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const resendEmailVerification = async () => {
+        try {
+            isLoading.value = true
+            const response = await api.post('/Account/ResendEmailVerification')
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const refreshToken = async () => {
+        if (!token.value) return false
+
+        try {
+            const response = await api.post('/Account/RefreshToken')
+
+            if (response.data.success && response.data.token) {
+                setToken(response.data.token)
+                if (response.data.user) {
+                    setUser(response.data.user)
+                }
+                return true
+            } else {
+                await logout()
+                return false
+            }
+        } catch (error) {
+            await logout()
+            return false
+        }
+    }
+
+    const checkAuthStatus = async () => {
+        if (!token.value) return false
+
+        try {
+            await fetchUser()
+            return true
+        } catch (error) {
+            return false
+        }
+    }
+
+    // Initialize auth on store creation
+    const initializeAuth = async () => {
+        if (token.value) {
+            api.setAuthToken(token.value)
+            try {
+                await fetchUser()
+            } catch (error) {
+                // Token is invalid, clear it
+                await logout()
+            }
+        }
+    }
+
+    // Social login methods
+    const loginWithGoogle = async (googleToken) => {
+        try {
+            isLoading.value = true
+            const response = await api.post('/Account/LoginWithGoogle', { token: googleToken })
+
+            if (response.data.success) {
+                const { token: authToken, user: userData } = response.data
+                setToken(authToken)
+                setUser(userData)
+                return response.data
+            } else {
+                throw new Error(response.data.message || 'Google login failed')
+            }
+        } catch (error) {
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const loginWithFacebook = async (facebookToken) => {
+        try {
+            isLoading.value = true
+            const response = await api.post('/Account/LoginWithFacebook', { token: facebookToken })
+
+            if (response.data.success) {
+                const { token: authToken, user: userData } = response.data
+                setToken(authToken)
+                setUser(userData)
+                return response.data
+            } else {
+                throw new Error(response.data.message || 'Facebook login failed')
+            }
+        } catch (error) {
+            throw error
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    return {
+        // State
+        user,
+        token,
+        isLoading,
+
+        // Getters
+        isAuthenticated,
+        userRole,
+        userFullName,
+        userInitials,
+
+        // Actions
+        login,
+        register,
+        logout,
+        fetchUser,
+        forgotPassword,
+        resetPassword,
+        changePassword,
+        verifyEmail,
+        resendEmailVerification,
+        refreshToken,
+        checkAuthStatus,
+        initializeAuth,
+        loginWithGoogle,
+        loginWithFacebook,
+        updateUser,
+        setUser,
+        setToken
+    }
 })
+
+export default useAuthStore

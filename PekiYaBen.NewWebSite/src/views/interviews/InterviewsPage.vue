@@ -59,7 +59,7 @@
           </div>
           <div class="col-lg-6">
             <div class="hero-image">
-              <img src="/online-coaching.jpg" alt="Online Koçluk" class="img-fluid" />
+              <img src="/assets/img/online-coaching.jpg" alt="Online Koçluk" class="img-fluid" />
             </div>
           </div>
         </div>

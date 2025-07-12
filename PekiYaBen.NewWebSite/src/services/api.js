@@ -1,115 +1,199 @@
+// src/services/api.js
 import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 import { useAppStore } from '@/stores/app'
+import router from '@/router'
 
-class ApiClient {
-  constructor() {
-    this.client = axios.create({
-      baseURL: '/api', // This will be proxied to your .NET backend
-      timeout: 30000,
-      headers: {
+// Create axios instance
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+    timeout: 30000,
+    headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-      }
-    })
-    
-    this.setupInterceptors()
-  }
-  
-  setupInterceptors() {
-    // Request interceptor
-    this.client.interceptors.request.use(
-      (config) => {
+    }
+})
+
+// Request interceptor
+api.interceptors.request.use(
+    (config) => {
+        const authStore = useAuthStore()
         const appStore = useAppStore()
-        appStore.setLoading(true)
-        
+
         // Add auth token if available
-        const token = localStorage.getItem('auth_token')
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`
+        if (authStore.token) {
+            config.headers.Authorization = `Bearer ${authStore.token}`
         }
-        
+
+        // Add CSRF token if available
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+        if (csrfToken) {
+            config.headers['X-CSRF-TOKEN'] = csrfToken
+        }
+
+        // Show loading for non-GET requests
+        if (config.method !== 'get') {
+            appStore.setLoading(true)
+        }
+
         return config
-      },
-      (error) => {
+    },
+    (error) => {
         const appStore = useAppStore()
         appStore.setLoading(false)
         return Promise.reject(error)
-      }
-    )
-    
-    // Response interceptor
-    this.client.interceptors.response.use(
-      (response) => {
+    }
+)
+
+// Response interceptor
+api.interceptors.response.use(
+    (response) => {
         const appStore = useAppStore()
         appStore.setLoading(false)
+
         return response
-      },
-      (error) => {
+    },
+    (error) => {
+        const authStore = useAuthStore()
         const appStore = useAppStore()
+
         appStore.setLoading(false)
-        
-        // Handle common errors
-        if (error.response?.status === 401) {
-          // Unauthorized - redirect to login
-          localStorage.removeItem('auth_token')
-          localStorage.removeItem('auth_user')
-          window.location.href = '/hesabim/giris'
-        } else if (error.response?.status === 404) {
-          // Not found - redirect to error page
-          window.location.href = '/hata'
+
+        // Handle different error status codes
+        if (error.response) {
+            const { status, data } = error.response
+
+            switch (status) {
+                case 401:
+                    // Unauthorized - clear auth and redirect to login
+                    authStore.logout()
+                    if (router.currentRoute.value.meta?.requiresAuth) {
+                        router.push({
+                            name: 'Login',
+                            query: { returnUrl: router.currentRoute.value.fullPath }
+                        })
+                    }
+                    break
+
+                case 403:
+                    // Forbidden - show error message
+                    console.error('Access denied:', data?.message || 'You do not have permission to access this resource')
+                    break
+
+                case 404:
+                    // Not found - redirect to 404 page for navigation requests
+                    if (error.config.method === 'get' && !error.config.url.includes('/api/')) {
+                        router.push({ name: 'NotFound' })
+                    }
+                    break
+
+                case 422:
+                    // Validation errors - these are handled by the calling component
+                    break
+
+                case 429:
+                    // Too many requests
+                    console.error('Rate limit exceeded. Please try again later.')
+                    break
+
+                case 500:
+                    // Server error
+                    console.error('Server error occurred. Please try again later.')
+                    break
+
+                default:
+                    console.error('API Error:', data?.message || error.message)
+            }
+        } else if (error.request) {
+            // Network error
+            console.error('Network error. Please check your internet connection.')
+        } else {
+            // Other error
+            console.error('Request failed:', error.message)
         }
-        
+
         return Promise.reject(error)
-      }
-    )
-  }
-  
-  setAuthToken(token) {
+    }
+)
+
+// Helper methods
+api.setAuthToken = (token) => {
     if (token) {
-      this.client.defaults.headers.Authorization = `Bearer ${token}`
+        api.defaults.headers.Authorization = `Bearer ${token}`
     } else {
-      delete this.client.defaults.headers.Authorization
+        delete api.defaults.headers.Authorization
     }
-  }
-  
-  // HTTP Methods
-  get(url, config = {}) {
-    return this.client.get(url, config)
-  }
-  
-  post(url, data = {}, config = {}) {
-    return this.client.post(url, data, config)
-  }
-  
-  put(url, data = {}, config = {}) {
-    return this.client.put(url, data, config)
-  }
-  
-  patch(url, data = {}, config = {}) {
-    return this.client.patch(url, data, config)
-  }
-  
-  delete(url, config = {}) {
-    return this.client.delete(url, config)
-  }
-  
-  // File upload
-  uploadFile(url, file, onProgress = null) {
-    const formData = new FormData()
-    formData.append('file', file)
-    
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }
-    
-    if (onProgress) {
-      config.onUploadProgress = onProgress
-    }
-    
-    return this.client.post(url, formData, config)
-  }
 }
 
-export default new ApiClient()
+api.clearAuthToken = () => {
+    delete api.defaults.headers.Authorization
+}
+
+// Request methods with error handling
+const apiMethods = {
+    async get(url, config = {}) {
+        try {
+            const response = await api.get(url, config)
+            return { data: response.data, status: response.status }
+        } catch (error) {
+            throw this.handleError(error)
+        }
+    },
+
+    async post(url, data = {}, config = {}) {
+        try {
+            const response = await api.post(url, data, config)
+            return { data: response.data, status: response.status }
+        } catch (error) {
+            throw this.handleError(error)
+        }
+    },
+
+    async put(url, data = {}, config = {}) {
+        try {
+            const response = await api.put(url, data, config)
+            return { data: response.data, status: response.status }
+        } catch (error) {
+            throw this.handleError(error)
+        }
+    },
+
+    async patch(url, data = {}, config = {}) {
+        try {
+            const response = await api.patch(url, data, config)
+            return { data: response.data, status: response.status }
+        } catch (error) {
+            throw this.handleError(error)
+        }
+    },
+
+    async delete(url, config = {}) {
+        try {
+            const response = await api.delete(url, config)
+            return { data: response.data, status: response.status }
+        } catch (error) {
+            throw this.handleError(error)
+        }
+    },
+
+    handleError(error) {
+        if (error.response?.data) {
+            return {
+                message: error.response.data.message || 'An error occurred',
+                errors: error.response.data.errors || {},
+                status: error.response.status
+            }
+        }
+
+        return {
+            message: error.message || 'Network error occurred',
+            errors: {},
+            status: 0
+        }
+    }
+}
+
+// Extend api with custom methods
+Object.assign(api, apiMethods)
+
+export default api
